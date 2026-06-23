@@ -11,7 +11,7 @@ def main():
     con = _mysql_connector.connect(
         host="localhost",
         user="root",
-        password="adbi@123",
+        password="asit@0987",
         database="ocac"
     )
     cursor = con.cursor()
@@ -99,7 +99,7 @@ def main():
         import home
         home.main()
 
-    Button(root, text="← Back to Home", fg="white", bg="#334155", font=("Arial", 10, "bold"), bd=0, cursor="hand2", command=back).place(x=50, y=50, width=140, height=35)
+    Button(root, text="← Back to Home", fg="white", bg="red", font=("Arial", 10, "bold"), bd=0, cursor="hand2", command=back).place(x=50, y=50, width=140, height=35)
 
     Button(root, text="REGISTER AS COUNSELOR", fg="white", bg=accent_purple, activebackground="#7c3aed", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=registration).place(x=900, y=360, width=300, height=45)
     

@@ -13,11 +13,7 @@ def main():
     con = _mysql_connector.connect(
         host="localhost",
         user="root",
-<<<<<<< HEAD
-        password="AKASH12",
-=======
-        password="adbi@123",
->>>>>>> 9e03462 (Merge remote changes: accept new updates while preserving local counsiler_register.py)
+        password="asit@0987",
         database="ocac"
     )
     cursor = con.cursor()
@@ -143,7 +139,7 @@ def main():
         import home
         home.main()
 
-    Button(root, text="← Back to Home", fg="white", bg="#334155", font=("Arial", 10, "bold"), bd=0, cursor="hand2", command=back).place(x=50, y=50, width=140, height=35)
+    Button(root, text="← Back to Home", fg="white", bg="red", font=("Arial", 10, "bold"), bd=0, cursor="hand2", command=back).place(x=50, y=50, width=140, height=35)
 
     Button(root, text="REGISTER AS ADMIN", fg="white", bg=accent_blue, font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=registration).place(x=860, y=350, width=300, height=45)
     

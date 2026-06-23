@@ -12,11 +12,7 @@ def main():
     con = _mysql_connector.connect(
         host="localhost",
         user="root",
-<<<<<<< HEAD
-        password="AKASH12",
-=======
-        password="adbi@123",
->>>>>>> 9e03462 (Merge remote changes: accept new updates while preserving local counsiler_register.py)
+        password="asit@0987",
         database="ocac"
     )
     cursor = con.cursor()
@@ -65,23 +61,22 @@ def main():
     text_dark = "#1e293b"
     accent_teal = "#0d9488"
 
-    # UI LABELS & ENTRIES DIRECTLY ON ROOT (Transparent layout)
-    title_label = Label(root, text="STUDENT PORTAL LOGIN", fg=text_dark, bg=bg_transparent, font=("Segoe UI", 24, "bold"))
-    title_label.place(x=515, y=80)
+    title_label = Label(root, text="STUDENT PORTAL LOGIN", fg="purple", bg=bg_transparent, font=("Segoe UI", 24, "bold"))
+    title_label.place(x=600, y=80)
 
-    Label(root, text="Username", fg=text_dark, bg=bg_transparent, font=("Arial", 12, "bold")).place(x=533, y=200)
+    Label(root, text="Username", fg=text_dark, bg=bg_transparent, font=("Arial", 12, "bold")).place(x=1000, y=200)
     txt_username = Entry(root, font=("Arial", 12), width=30, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_username.place(x=533, y=230, height=30)
+    txt_username.place(x=1000, y=230, height=30)
 
-    Label(root, text="Password", fg=text_dark, bg=bg_transparent, font=("Arial", 12, "bold")).place(x=533, y=300)
+    Label(root, text="Password", fg=text_dark, bg=bg_transparent, font=("Arial", 12, "bold")).place(x=1000, y=300)
     txt_password = Entry(root, show="*", font=("Arial", 12), width=30, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_password.place(x=533, y=330, height=30)
+    txt_password.place(x=1000, y=330, height=30)
 
-    Button(root, text="← Back", fg="white", bg="#334155", font=("Arial", 11, "bold"), command=back).place(x=50, y=520, width=120, height=30)
+    Button(root, text="← Back to home", fg="white", bg="red", font=("Arial", 11, "bold"), command=back).place(x=50, y=50, width=120, height=30)
 
-    Button(root, text="LOGIN AS STUDENT", fg="white", bg=accent_teal, activebackground="#0f766e", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=login_action).place(x=533, y=410, width=300, height=40)
+    Button(root, text="LOGIN AS STUDENT", fg="white", bg=accent_teal, activebackground="#0f766e", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=login_action).place(x=1000, y=410, width=300, height=40)
 
-    Label(root, text="Need account?", fg=text_dark, bg=bg_transparent, font=("Helvetica", 11, "bold")).place(x=500, y=520, width=180)
-    Button(root, text="REGISTER HERE", fg="white", bg="red", font=("Arial", 11, "bold"), command=register).place(x=690, y=520, width=140, height=30)
+    Label(root, text="Need account?", fg=text_dark, bg=bg_transparent, font=("Helvetica", 11, "bold")).place(x=950, y=520, width=180)
+    Button(root, text="REGISTER HERE", fg="white", bg="red", font=("Arial", 11, "bold"), command=register).place(x=1150, y=520, width=140, height=30)
 
     root.mainloop()
