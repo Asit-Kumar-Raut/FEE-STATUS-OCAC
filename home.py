@@ -1,33 +1,20 @@
 from tkinter import *
-from tkinter import messagebox
 from PIL import Image, ImageTk
 
 def admin_registerpage():
     root.destroy()
-    try:
-        from admin import admin_register
-        admin_register.main()
-    except Exception as e:
-        import traceback
-        messagebox.showerror("Error", f"Failed to load Admin Registration:\n{traceback.format_exc()}")
+    from admin import admin_register
+    admin_register.main()
 
 def conciler_registerpage():
     root.destroy()
-    try:
-        from counsiler import consiler_register
-        consiler_register.main()
-    except Exception as e:
-        import traceback
-        messagebox.showerror("Error", f"Failed to load Counselor Registration:\n{traceback.format_exc()}")
+    from counsiler import consiler_register
+    consiler_register.main()
 
 def student_registerpage():
     root.destroy()
-    try:
-        from student import student_register
-        student_register.main()
-    except Exception as e:
-        import traceback
-        messagebox.showerror("Error", f"Failed to load Student Registration:\n{traceback.format_exc()}")
+    from student import student_register
+    student_register.main()
 
 def main():
     global root
