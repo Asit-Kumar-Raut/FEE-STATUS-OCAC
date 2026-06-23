@@ -73,26 +73,26 @@ def main():
     title_label.place(x=450, y=30)
 
     # Left Column
-    Label(root, text="Counselor ID", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=350, y=100)
+    Label(root, text="Counselor ID", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=720, y=100)
     txt_id = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_id.place(x=350, y=125, height=30)
+    txt_id.place(x=720, y=125, height=30)
 
-    Label(root, text="Name", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=350, y=180)
+    Label(root, text="Name", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=720, y=180)
     txt_name = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_name.place(x=350, y=205, height=30)
+    txt_name.place(x=720, y=205, height=30)
 
-    Label(root, text="Username", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=350, y=260)
+    Label(root, text="Username", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=720, y=260)
     txt_username = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_username.place(x=350, y=285, height=30)
+    txt_username.place(x=720, y=285, height=30)
 
     # Right Column
-    Label(root, text="Contact Number", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=720, y=100)
+    Label(root, text="Contact Number", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=1070, y=100)
     txt_contact = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_contact.place(x=720, y=125, height=30)
+    txt_contact.place(x=1070, y=125, height=30)
 
-    Label(root, text="Password", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=720, y=180)
+    Label(root, text="Password", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=1070, y=180)
     txt_password = Entry(root, show="*", font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_password.place(x=720, y=205, height=30)
+    txt_password.place(x=1070, y=205, height=30)
 
     def back():
         root.destroy()
@@ -101,9 +101,9 @@ def main():
 
     Button(root, text="← Back to Home", fg="white", bg="#334155", font=("Arial", 10, "bold"), bd=0, cursor="hand2", command=back).place(x=50, y=50, width=140, height=35)
 
-    Button(root, text="REGISTER AS COUNSELOR", fg="white", bg=accent_purple, activebackground="#7c3aed", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=registration).place(x=515, y=360, width=300, height=45)
+    Button(root, text="REGISTER AS COUNSELOR", fg="white", bg=accent_purple, activebackground="#7c3aed", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=registration).place(x=900, y=360, width=300, height=45)
     
-    Label(root, text="Already registered?", fg=text_dark, bg=bg_transparent, font=("Helvetica", 11, "bold")).place(x=500, y=440, width=150)
-    Button(root, text="LOGIN HERE", fg="white", bg="red", font=("Arial", 11, "bold"), command=login).place(x=660, y=440, width=120, height=30)
+    Label(root, text="Already registered?", fg=text_dark, bg=bg_transparent, font=("Helvetica", 11, "bold")).place(x=900, y=440, width=150)
+    Button(root, text="LOGIN HERE", fg="white", bg="red", font=("Arial", 11, "bold"), command=login).place(x=1070, y=440, width=120, height=30)
 
     root.mainloop()
