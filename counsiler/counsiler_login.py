@@ -1,8 +1,3 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from tkinter import *
 from PIL import Image, ImageTk
 import mysql.connector as _mysql_connector
@@ -24,12 +19,12 @@ def main():
 
     def register():
         root.destroy()
-        import consiler_register
+        from counsiler import consiler_register
         consiler_register.main()
 
     def back():
         root.destroy()
-        import consiler_register
+        from counsiler import consiler_register
         consiler_register.main()
 
     def login_action():
@@ -54,9 +49,7 @@ def main():
             messagebox.showerror("Error", "Invalid Username or Password!😱")
 
     # BACKGROUND IMAGE (Counselor dedicated)
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    bg_path = os.path.join(project_root, "images", "counceler.jpeg")
-    bg = Image.open(bg_path)
+    bg = Image.open(r"images\counceler.jpeg")
     bg_resized = bg.resize((1366, 768), Image.Resampling.LANCZOS)
     background_photo = ImageTk.PhotoImage(bg_resized)
     background_label = Label(root, image=background_photo)

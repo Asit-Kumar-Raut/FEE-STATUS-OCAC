@@ -1,13 +1,7 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from tkinter import *
 from PIL import Image, ImageTk
 import mysql.connector as _mysql_connector
 from tkinter import messagebox
-
 def main():
     root = Tk()
     root.title("Student Registration")
@@ -24,13 +18,11 @@ def main():
 
     def login():
         root.destroy()
-        import student_login
+        from student import student_login
         student_login.main()
 
     # BACKGROUND IMAGE (Student dedicated)
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    bg_path = os.path.join(project_root, "images", "student_registration.jpeg")
-    bg = Image.open(bg_path)
+    bg = Image.open(r"images\student_registration.jpeg")
     bg_resized = bg.resize((1366, 768), Image.Resampling.LANCZOS)
     background_photo = ImageTk.PhotoImage(bg_resized)
     background_label = Label(root, image=background_photo)

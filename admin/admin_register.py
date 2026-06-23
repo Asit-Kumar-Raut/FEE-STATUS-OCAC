@@ -1,8 +1,3 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from tkinter import *
 from PIL import Image, ImageTk
 import mysql.connector as _mysql_connector
@@ -25,13 +20,11 @@ def main():
 
     def login():
         root.destroy()
-        import admin_login
+        from admin import admin_login
         admin_login.main()
 
     # BACKGROUND IMAGE (Admin dedicated)
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    bg_path = os.path.join(project_root, "images", "admin_login_register.jpeg")
-    bg = Image.open(bg_path)
+    bg = Image.open(r"images\admin_login_register.jpeg")
     bg_resized = bg.resize((1366, 768), Image.Resampling.LANCZOS)
     background_photo = ImageTk.PhotoImage(bg_resized)
     background_label = Label(root, image=background_photo)
@@ -148,7 +141,7 @@ def main():
 
     Button(root, text="← Back to Home", fg="white", bg="#334155", font=("Arial", 10, "bold"), bd=0, cursor="hand2", command=back).place(x=50, y=50, width=140, height=35)
 
-    Button(root, text="REGISTER AS ADMIN", fg="white", bg=accent_blue, activebackground="#1d4ed8", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=registration).place(x=515, y=360, width=300, height=45)
+    Button(root, text="REGISTER AS ADMIN", fg="white", bg=accent_blue, font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=registration).place(x=515, y=360, width=300, height=45)
     
     Label(root, text="Already registered?", fg=text_dark, bg=bg_transparent, font=("Helvetica", 11, "bold")).place(x=500, y=440, width=150)
     Button(root, text="LOGIN HERE", fg="white", bg="red", font=("Arial", 11, "bold"), command=login).place(x=660, y=440, width=120, height=30)

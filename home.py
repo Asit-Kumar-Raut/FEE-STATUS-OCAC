@@ -1,43 +1,33 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
 from tkinter import *
+from tkinter import messagebox
 from PIL import Image, ImageTk
-from admin import admin_register
-from counsiler import consiler_register
-from student import student_register
 
 def admin_registerpage():
     root.destroy()
-    admin_register.main()
+    try:
+        from admin import admin_register
+        admin_register.main()
+    except Exception as e:
+        import traceback
+        messagebox.showerror("Error", f"Failed to load Admin Registration:\n{traceback.format_exc()}")
 
 def conciler_registerpage():
     root.destroy()
-    consiler_register.main()
+    try:
+        from counsiler import consiler_register
+        consiler_register.main()
+    except Exception as e:
+        import traceback
+        messagebox.showerror("Error", f"Failed to load Counselor Registration:\n{traceback.format_exc()}")
 
 def student_registerpage():
     root.destroy()
-    student_register.main()
-
-# Button Hover Animations
-def on_enter_blue(e):
-    e.widget.config(bg="#2563eb")
-
-def on_leave_blue(e):
-    e.widget.config(bg="#3b82f6")
-
-def on_enter_purple(e):
-    e.widget.config(bg="#7c3aed")
-
-def on_leave_purple(e):
-    e.widget.config(bg="#8b5cf6")
-
-def on_enter_teal(e):
-    e.widget.config(bg="#0f766e")
-
-def on_leave_teal(e):
-    e.widget.config(bg="#0d9488")
+    try:
+        from student import student_register
+        student_register.main()
+    except Exception as e:
+        import traceback
+        messagebox.showerror("Error", f"Failed to load Student Registration:\n{traceback.format_exc()}")
 
 def main():
     global root
@@ -53,9 +43,7 @@ def main():
     text_muted = "#94a3b8"      # Slate 400
 
     # BACKGROUND IMAGE
-    project_root = os.path.dirname(os.path.abspath(__file__))
-    bg_path = os.path.join(project_root, "images", "WhatsApp Image 2026-06-23 at 11.19.09 AM.jpeg")
-    bg = Image.open(bg_path)
+    bg = Image.open(r"images\WhatsApp Image 2026-06-23 at 11.19.09 AM.jpeg")
     img = bg.resize((1366, 768), Image.Resampling.LANCZOS)
     background_photo = ImageTk.PhotoImage(img)
 
@@ -79,31 +67,19 @@ def main():
     Label(card, text="Please select your credential profile", font=("Segoe UI", 10), fg=text_muted, bg=card_color).pack(pady=(0, 20))
 
     # ADMIN BUTTON (Blue Accent)
-    btn_admin = Button(card, text="Admin Portal  →", fg="white", bg="#3b82f6", activebackground="#2563eb", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=admin_registerpage)
+    btn_admin = Button(card, text="Admin Portal  →", fg="white", bg="#3b82f6", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=admin_registerpage)
     btn_admin.pack(pady=10, ipady=12, fill=X)
-    btn_admin.bind("<Enter>", on_enter_blue)
-    btn_admin.bind("<Leave>", on_leave_blue)
 
     # COUNSELOR BUTTON (Purple Accent)
-    btn_counselor = Button(card, text="Counselor Desk  →", fg="white", bg="#8b5cf6", activebackground="#7c3aed", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=conciler_registerpage)
+    btn_counselor = Button(card, text="Counselor Desk  →", fg="white", bg="#8b5cf6", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=conciler_registerpage)
     btn_counselor.pack(pady=10, ipady=12, fill=X)
-    btn_counselor.bind("<Enter>", on_enter_purple)
-    btn_counselor.bind("<Leave>", on_leave_purple)
 
     # STUDENT BUTTON (Teal Accent)
-    btn_student = Button(card, text="Student Portal  →", fg="white", bg="#0d9488", activebackground="#0f766e", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=student_registerpage)
+    btn_student = Button(card, text="Student Portal  →", fg="white", bg="#0d9488", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=student_registerpage)
     btn_student.pack(pady=10, ipady=12, fill=X)
-    btn_student.bind("<Enter>", on_enter_teal)
-    btn_student.bind("<Leave>", on_leave_teal)
 
     # TEAM MEMBERS WIDGET (Drawn directly on canvas for 100% transparent background)
-    team_text = (
-        "🌟 DEVELOPMENT TEAM\n"
-        "• ASIT KUMAR RAUT (Team Leader)\n"
-        "• BISHWAPRAKASH ROUT\n"
-        "• AKASH KUMAR SWAIN\n"
-        "• ADITYA KUMAR SAHOO"
-    )
+    team_text = ( "🌟 DEVELOPMENT TEAM\n""• ASIT KUMAR RAUT (Team Leader)\n""• BISHWAPRAKASH ROUT\n""• AKASH KUMAR SWAIN\n""• ADITYA KUMAR SAHOO")
     canvas.create_text(1336, 710, text=team_text, fill="#ffffff", font=("Segoe UI", 11, "bold"), anchor=SE, justify=LEFT)
 
     # FOOTER LABEL

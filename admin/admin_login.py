@@ -1,8 +1,3 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from tkinter import *
 from PIL import Image, ImageTk
 import mysql.connector as _mysql_connector
@@ -24,12 +19,12 @@ def main():
 
     def register():
         root.destroy()
-        import admin_register
+        from admin import admin_register
         admin_register.main()
 
     def back():
         root.destroy()
-        import admin_register
+        from admin import admin_register
         admin_register.main()
 
     def login_action():
@@ -49,7 +44,7 @@ def main():
             messagebox.showinfo("Success", f"Welcome back, {admin_name}!🤗")
             root.destroy()
             try:
-                import admin_dashboard
+                from admin import admin_dashboard
                 admin_dashboard.main(admin_name, admin_id)
             except Exception as e:
                 import traceback
@@ -58,9 +53,7 @@ def main():
             messagebox.showerror("Error", "Invalid Username or Password!😱")
 
     # BACKGROUND IMAGE (Admin dedicated)
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    bg_path = os.path.join(project_root, "images", "admin_login_register.jpeg")
-    bg = Image.open(bg_path)
+    bg = Image.open(r"images\admin_login_register.jpeg")
     bg_resized = bg.resize((1366, 768), Image.Resampling.LANCZOS)
     background_photo = ImageTk.PhotoImage(bg_resized)
     background_label = Label(root, image=background_photo)
@@ -86,7 +79,7 @@ def main():
 
     Button(root, text="← Back", fg="white", bg="#334155", font=("Arial", 11, "bold"), command=back).place(x=50, y=520, width=120, height=30)
 
-    Button(root, text="LOGIN AS ADMIN", fg="white", bg=accent_blue, activebackground="#1d4ed8", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=login_action).place(x=533, y=410, width=300, height=40)
+    Button(root, text="LOGIN AS ADMIN", fg="white", bg=accent_blue, font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=login_action).place(x=533, y=410, width=300, height=40)
 
     Label(root, text="No account?", fg=text_dark, bg=bg_transparent, font=("Helvetica", 11, "bold")).place(x=500, y=520, width=180)
     Button(root, text="REGISTER HERE", fg="white", bg="red", font=("Arial", 11, "bold"), command=register).place(x=690, y=520, width=140, height=30)

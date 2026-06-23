@@ -1,8 +1,3 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from tkinter import *
 from PIL import Image, ImageTk
 import mysql.connector as _mysql_connector
@@ -24,12 +19,12 @@ def main():
 
     def register():
         root.destroy()
-        import student_register
+        from student import student_register
         student_register.main()
 
     def back():
         root.destroy()
-        import student_register
+        from student import student_register
         student_register.main()
 
     def login_action():
@@ -54,11 +49,7 @@ def main():
             messagebox.showerror("Error", "Invalid Username or Password!😱")
 
     # BACKGROUND IMAGE (Student dedicated)
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    bg_path = os.path.join(project_root, "images", "student_registration.jpeg") # Use the same photo or keep the image search image
-    # The user said: "make the student background as transparent background every photo should be show means the background photo should be shown"
-    # So we use student_registration.jpeg as the background image for BOTH register and login so it matches!
-    bg = Image.open(bg_path)
+    bg = Image.open(r"images\student_registration.jpeg")
     bg_resized = bg.resize((1366, 768), Image.Resampling.LANCZOS)
     background_photo = ImageTk.PhotoImage(bg_resized)
     background_label = Label(root, image=background_photo)
