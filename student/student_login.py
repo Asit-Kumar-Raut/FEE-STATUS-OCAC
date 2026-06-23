@@ -66,7 +66,7 @@ def main():
     accent_teal = "#0d9488"
 
     # UI LABELS & ENTRIES DIRECTLY ON ROOT (Transparent layout)
-    title_label = Label(root, text="STUDENT PORTAL LOGIN", fg=text_dark, bg=bg_transparent, font=("Segoe UI", 24, "bold"))
+    title_label = Label(root, text="STUDENT PORTAL LOGIN", fg="purple", bg=bg_transparent, font=("Segoe UI", 24, "bold"))
     title_label.place(x=515, y=80)
 
     Label(root, text="Username", fg=text_dark, bg=bg_transparent, font=("Arial", 12, "bold")).place(x=1000, y=200)
