@@ -1,8 +1,12 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from tkinter import *
 from PIL import Image, ImageTk
 import mysql.connector as _mysql_connector
 from tkinter import messagebox
-import admin_login
 
 def main():
     root = Tk()
@@ -21,10 +25,13 @@ def main():
 
     def login():
         root.destroy()
+        import admin_login
         admin_login.main()
 
-    # BACKGROUND IMAGE
-    bg = Image.open(r"images\Gemini_Generated_Image_5h883b5h883b5h88.png")
+    # BACKGROUND IMAGE (Admin dedicated)
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    bg_path = os.path.join(project_root, "images", "admin_login_register.jpeg")
+    bg = Image.open(bg_path)
     bg_resized = bg.resize((1366, 768), Image.Resampling.LANCZOS)
     background_photo = ImageTk.PhotoImage(bg_resized)
     background_label = Label(root, image=background_photo)
@@ -100,44 +107,50 @@ def main():
         messagebox.showinfo("Success", "Admin registered successfully! Now you can login🤗")
         login()
 
-    # LABELS & ENTRIES
-    title_label = Label(root, text="Admin Registration", fg="#1e293b", font=("Helvetica", 24, "bold"))
-    title_label.place(x=515, y=40)
+    # Stylistic transparent layout variables
+    bg_transparent = "#71a0cf" # Blends with admin_login_register.jpeg
+    text_dark = "#0f172a"
+    accent_blue = "#2563eb"
 
-    Label(root, text="Admin ID", fg="#475569", font=("Arial", 11, "bold")).place(x=533, y=120)
-    txt_id = Entry(root, font=("Arial", 11), width=35, bd=2)
-    txt_id.place(x=533, y=145)
+    title_label = Label(root, text="ADMIN PORTAL REGISTRATION", fg=text_dark, bg=bg_transparent, font=("Segoe UI", 24, "bold"))
+    title_label.place(x=450, y=30)
 
-    Label(root, text="Full Name", fg="#475569", font=("Arial", 11, "bold")).place(x=533, y=195)
-    txt_name = Entry(root, font=("Arial", 11), width=35, bd=2)
-    txt_name.place(x=533, y=220)
+    # Left Column
+    Label(root, text="Admin ID", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=350, y=100)
+    txt_id = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
+    txt_id.place(x=350, y=125, height=30)
 
-    Label(root, text="Username", fg="#475569", font=("Arial", 11, "bold")).place(x=533, y=270)
-    txt_username = Entry(root, font=("Arial", 11), width=35, bd=2)
-    txt_username.place(x=533, y=295)
+    Label(root, text="Full Name", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=350, y=180)
+    txt_name = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
+    txt_name.place(x=350, y=205, height=30)
 
-    Label(root, text="Email Address", fg="#475569", font=("Arial", 11, "bold")).place(x=533, y=345)
-    txt_email = Entry(root, font=("Arial", 11), width=35, bd=2)
-    txt_email.place(x=533, y=370)
+    Label(root, text="Username", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=350, y=260)
+    txt_username = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
+    txt_username.place(x=350, y=285, height=30)
 
-    Label(root, text="Contact Number", fg="#475569", font=("Arial", 11, "bold")).place(x=533, y=420)
-    txt_contact = Entry(root, font=("Arial", 11), width=35, bd=2)
-    txt_contact.place(x=533, y=445)
+    # Right Column
+    Label(root, text="Email Address", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=720, y=100)
+    txt_email = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
+    txt_email.place(x=720, y=125, height=30)
 
-    Label(root, text="Password", fg="#475569", font=("Arial", 11, "bold")).place(x=533, y=495)
-    txt_password = Entry(root, show="*", font=("Arial", 11), width=35, bd=2)
-    txt_password.place(x=533, y=520)
+    Label(root, text="Contact Number", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=720, y=180)
+    txt_contact = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
+    txt_contact.place(x=720, y=205, height=30)
+
+    Label(root, text="Password", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=720, y=260)
+    txt_password = Entry(root, show="*", font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
+    txt_password.place(x=720, y=285, height=30)
 
     def back():
         root.destroy()
-        import main
-        main.main()
+        import home
+        home.main()
 
-    Button(root, text="Back", fg="white", bg="gray", font=("Arial", 11, "bold"), command=back).place(x=50, y=650, width=120, height=30)
+    Button(root, text="← Back to Home", fg="white", bg="#334155", font=("Arial", 10, "bold"), bd=0, cursor="hand2", command=back).place(x=50, y=50, width=140, height=35)
 
-    Button(root, text="Register as Admin", fg="white", bg="#00d5ff", font=("Arial", 12, "bold"), bd=0, cursor="hand2", command=registration).place(x=533, y=580, width=285, height=40)
+    Button(root, text="REGISTER AS ADMIN", fg="white", bg=accent_blue, activebackground="#1d4ed8", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=registration).place(x=515, y=360, width=300, height=45)
     
-    Label(root, text="have an account->", fg="red", font=("Helvetica", 11, "bold")).place(x=500, y=650, width=150)
-    Button(root, text="LOGIN HERE", fg="white", bg="red", font=("Arial", 11, "bold"), command=login).place(x=660, y=650, width=120, height=30)
+    Label(root, text="Already registered?", fg=text_dark, bg=bg_transparent, font=("Helvetica", 11, "bold")).place(x=500, y=440, width=150)
+    Button(root, text="LOGIN HERE", fg="white", bg="red", font=("Arial", 11, "bold"), command=login).place(x=660, y=440, width=120, height=30)
 
     root.mainloop()
