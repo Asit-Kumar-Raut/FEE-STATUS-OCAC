@@ -53,7 +53,7 @@ def main():
             messagebox.showerror("Error", "Invalid Username or Password!😱")
 
     # BACKGROUND IMAGE (Student dedicated)
-    bg = Image.open(r"images\student_registration.jpeg")
+    bg = Image.open(r"images\student_login_reverse.png")
     bg_resized = bg.resize((1366, 768), Image.Resampling.LANCZOS)
     background_photo = ImageTk.PhotoImage(bg_resized)
     background_label = Label(root, image=background_photo)

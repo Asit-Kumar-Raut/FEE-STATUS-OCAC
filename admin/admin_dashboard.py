@@ -13,11 +13,7 @@
 #     con = _mysql_connector.connect(
 #         host="localhost",
 #         user="root",
-<<<<<<< HEAD
-#         password="AKASH12",
-=======
 #         password="adbi@123",
->>>>>>> 9e03462 (Merge remote changes: accept new updates while preserving local counsiler_register.py)
 #         database="ocac"
 #     )
 #     cursor = con.cursor()
