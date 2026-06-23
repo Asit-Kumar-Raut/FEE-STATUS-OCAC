@@ -11,7 +11,11 @@ def main():
     con = _mysql_connector.connect(
         host="localhost",
         user="root",
+<<<<<<< HEAD
         password="AKASH12",
+=======
+        password="adbi@123",
+>>>>>>> 9e03462 (Merge remote changes: accept new updates while preserving local counsiler_register.py)
         database="ocac"
     )
     cursor = con.cursor()
@@ -73,46 +77,46 @@ def main():
     text_dark = "#1e293b"
     accent_teal = "#0d9488"
 
-    title_label = Label(root, text="STUDENT PORTAL REGISTRATION", fg="purple", bg=bg_transparent, font=("Segoe UI", 24, "bold"))
-    title_label.place(x=400, y=30)
+    title_label = Label(root, text="STUDENT PORTAL REGISTRATION", fg=text_dark, bg=bg_transparent, font=("Segoe UI", 24, "bold"))
+    title_label.place(x=450, y=30)
 
     # Left Column Inputs
-    Label(root, text="Student ID", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=50, y=100)
+    Label(root, text="Student ID", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=350, y=100)
     txt_id = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_id.place(x=50, y=125, height=30)
+    txt_id.place(x=350, y=125, height=30)
 
-    Label(root, text="Full Name", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=50, y=180)
+    Label(root, text="Full Name", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=350, y=180)
     txt_name = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_name.place(x=50, y=205, height=30)
+    txt_name.place(x=350, y=205, height=30)
 
-    Label(root, text="Username", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=50, y=260)
+    Label(root, text="Username", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=350, y=260)
     txt_username = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_username.place(x=50, y=285, height=30)
+    txt_username.place(x=350, y=285, height=30)
 
-    Label(root, text="Phone Number", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=50, y=340)
+    Label(root, text="Phone Number", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=350, y=340)
     txt_phone = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_phone.place(x=50, y=365, height=30)
+    txt_phone.place(x=350, y=365, height=30)
 
-    Label(root, text="Email ID", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=50, y=420)
+    Label(root, text="Email ID", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=350, y=420)
     txt_email = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_email.place(x=50, y=445, height=30)
+    txt_email.place(x=350, y=445, height=30)
 
     # Right Column Inputs
-    Label(root, text="Course", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=420, y=100)
+    Label(root, text="Course", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=720, y=100)
     txt_course = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_course.place(x=420, y=125, height=30)
+    txt_course.place(x=720, y=125, height=30)
 
-    Label(root, text="Academic Year", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=420, y=180)
+    Label(root, text="Academic Year", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=720, y=180)
     txt_year = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_year.place(x=420, y=205, height=30)
+    txt_year.place(x=720, y=205, height=30)
 
-    Label(root, text="Semester", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=420, y=260)
+    Label(root, text="Semester", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=720, y=260)
     txt_sem = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_sem.place(x=420, y=285, height=30)
+    txt_sem.place(x=720, y=285, height=30)
 
-    Label(root, text="Password", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=420, y=340)
+    Label(root, text="Password", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=720, y=340)
     txt_password = Entry(root, show="*", font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_password.place(x=420, y=365, height=30)
+    txt_password.place(x=720, y=365, height=30)
 
     def back():
         root.destroy()
@@ -121,9 +125,9 @@ def main():
 
     Button(root, text="← Back to Home", fg="white", bg="#334155", font=("Arial", 10, "bold"), bd=0, cursor="hand2", command=back).place(x=50, y=50, width=140, height=35)
 
-    Button(root, text="REGISTER STUDENT", fg="white", bg=accent_teal, activebackground="#0f766e", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=registration).place(x=200, y=530, width=300, height=45)
+    Button(root, text="REGISTER STUDENT", fg="white", bg=accent_teal, activebackground="#0f766e", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=registration).place(x=515, y=530, width=300, height=45)
     
-    Label(root, text="Already registered?", fg=text_dark, bg=bg_transparent, font=("Helvetica", 11, "bold")).place(x=200, y=610, width=150)
-    Button(root, text="LOGIN HERE", fg="white", bg="red", font=("Arial", 11, "bold"), command=login).place(x=370, y=610, width=120, height=30)
+    Label(root, text="Already registered?", fg=text_dark, bg=bg_transparent, font=("Helvetica", 11, "bold")).place(x=500, y=610, width=150)
+    Button(root, text="LOGIN HERE", fg="white", bg="red", font=("Arial", 11, "bold"), command=login).place(x=660, y=610, width=120, height=30)
 
     root.mainloop()
