@@ -1,33 +1,20 @@
 from tkinter import *
-from tkinter import messagebox
 from PIL import Image, ImageTk
 
 def admin_registerpage():
     root.destroy()
-    try:
-        from admin import admin_register
-        admin_register.main()
-    except Exception as e:
-        import traceback
-        messagebox.showerror("Error", f"Failed to load Admin Registration:\n{traceback.format_exc()}")
+    from admin import admin_register
+    admin_register.main()
 
 def conciler_registerpage():
     root.destroy()
-    try:
-        from counsiler import consiler_register
-        consiler_register.main()
-    except Exception as e:
-        import traceback
-        messagebox.showerror("Error", f"Failed to load Counselor Registration:\n{traceback.format_exc()}")
+    from counsiler import consiler_register
+    consiler_register.main()
 
 def student_registerpage():
     root.destroy()
-    try:
-        from student import student_register
-        student_register.main()
-    except Exception as e:
-        import traceback
-        messagebox.showerror("Error", f"Failed to load Student Registration:\n{traceback.format_exc()}")
+    from student import student_register
+    student_register.main()
 
 def main():
     global root
@@ -54,7 +41,6 @@ def main():
     canvas.image = background_photo
 
     # TITLE LABEL (Drawn directly on canvas for 100% transparent background)
-    canvas.create_text(683, 110, text="Choose Your Role", fill="#f8fafc", font=("Segoe UI", 28, "bold"), anchor=CENTER)
 
     # CENTRAL OPTIONS CARD SHADOW & FRAME
     card_shadow = Frame(root, bg=bg_shadow, bd=0)
@@ -67,24 +53,21 @@ def main():
     Label(card, text="Please select your credential profile", font=("Segoe UI", 10), fg=text_muted, bg=card_color).pack(pady=(0, 20))
 
     # ADMIN BUTTON (Blue Accent)
-    btn_admin = Button(card, text="Admin Portal  →", fg="white", bg="#3b82f6", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=admin_registerpage)
+    btn_admin = Button(card, text="Admin→", fg="white", bg="#3b82f6", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=admin_registerpage)
     btn_admin.pack(pady=10, ipady=12, fill=X)
 
     # COUNSELOR BUTTON (Purple Accent)
-    btn_counselor = Button(card, text="Counselor Desk  →", fg="white", bg="#8b5cf6", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=conciler_registerpage)
+    btn_counselor = Button(card, text="Counselor→", fg="white", bg="#8b5cf6", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=conciler_registerpage)
     btn_counselor.pack(pady=10, ipady=12, fill=X)
 
     # STUDENT BUTTON (Teal Accent)
-    btn_student = Button(card, text="Student Portal  →", fg="white", bg="#0d9488", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=student_registerpage)
+    btn_student = Button(card, text="Student→", fg="white", bg="#0d9488", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=student_registerpage)
     btn_student.pack(pady=10, ipady=12, fill=X)
 
     # TEAM MEMBERS WIDGET (Drawn directly on canvas for 100% transparent background)
-    team_text = ( "🌟 DEVELOPMENT TEAM\n""• ASIT KUMAR RAUT (Team Leader)\n""• BISHWAPRAKASH ROUT\n""• AKASH KUMAR SWAIN\n""• ADITYA KUMAR SAHOO")
+    team_text = ( "🌟 DEVELOPMENT TEAM\n""• ASIT KUMAR RAUT (Team Leader)\n""• BISHWA PRAKASH ROUT\n""• AKASH KUMAR SWAIN\n""• ADITYA KUMAR SAHOO")
     canvas.create_text(1336, 710, text=team_text, fill="#ffffff", font=("Segoe UI", 11, "bold"), anchor=SE, justify=LEFT)
 
-    # FOOTER LABEL
-    footer_text = "Fee-Status-Manager © 2026 • Secure & Verified Connections"
-    canvas.create_text(683, 730, text=footer_text, fill=text_muted, font=("Segoe UI", 9), anchor=CENTER)
 
     root.mainloop()
 
