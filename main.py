@@ -28,9 +28,6 @@ def main():
     canvas.create_image(0, 0, image=background_photo, anchor=NW)
     canvas.image = background_photo
 
-    # Render Welcome headers directly on canvas
-    canvas.create_text(683, 110, text="WELCOME TO", fill=text_muted, font=("Segoe UI", 16, "bold"), anchor=CENTER)
-    canvas.create_text(683, 160, text="FEE STATUS MANAGER", fill="#60a5fa", font=("Segoe UI", 32, "bold"), anchor=CENTER)
 
     # Render credits header directly on canvas
     canvas.create_text(683, 270, text="🌟 SYSTEM DEVELOPED BY 🌟", fill="#f59e0b", font=("Segoe UI", 15, "bold"), anchor=CENTER)
@@ -47,9 +44,6 @@ def main():
     btn_proceed = Button(root, text="PROCEED  →", fg="white", bg="#059669", font=("Segoe UI", 14, "bold"), bd=0, cursor="hand2", command=launch_home)
     canvas.create_window(683, 580, window=btn_proceed, width=320, height=52, anchor=CENTER)
 
-    # Foot note
-    footer_text = "Fee-Status-Manager © 2026 • Secure & Verified Connections"
-    canvas.create_text(683, 730, text=footer_text, fill=text_muted, font=("Segoe UI", 10), anchor=CENTER)
 
     root.mainloop()
 
