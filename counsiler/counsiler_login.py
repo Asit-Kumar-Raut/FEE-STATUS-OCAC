@@ -12,7 +12,7 @@ def main():
     con = _mysql_connector.connect(
         host="localhost",
         user="root",
-        password="123456789",
+        password="asit@0987",
         database="ocac"
     )
     cursor = con.cursor()
@@ -34,16 +34,18 @@ def main():
             messagebox.showerror("Error", "Username is required!😟")
             return
 
-        cursor.execute("SELECT name, status FROM counselors WHERE username = %s", (username,))
+        cursor.execute("SELECT name, counselor_id, status FROM counselors WHERE username = %s", (username,))
         result = cursor.fetchone()
 
         if result:
-            name, status = result
+            name, counselor_id, status = result
             if status != "Accepted":
                 messagebox.showerror("Access Denied", "Your account is pending admin approval.😟")
             else:
                 messagebox.showinfo("Success", f"Welcome Counselor {name}!🤗")
                 root.destroy()
+                from counsiler import counciler_dashboard
+                counciler_dashboard.main(name, counselor_id)
         else:
             messagebox.showerror("Error", "Invalid Username or Password!😱")
 

@@ -11,7 +11,7 @@ def main():
     con = _mysql_connector.connect(
         host="localhost",
         user="root",
-        password="123456789",
+        password="asit@0987",
         database="ocac"
     )
     cursor = con.cursor()
@@ -65,6 +65,22 @@ def main():
         messagebox.showinfo("Success", "Registration submitted! Admin approval required to log in.🤗")
         login()
 
+    import random
+
+    def generate_unique_id():
+        while True:
+            new_id_val = str(random.randint(100, 9999))
+            cursor.execute("SELECT * FROM counselors WHERE counselor_id = %s", (new_id_val,))
+            if not cursor.fetchone():
+                return new_id_val
+
+    def regenerate_id():
+        new_id_val = generate_unique_id()
+        txt_id.config(state="normal")
+        txt_id.delete(0, END)
+        txt_id.insert(0, new_id_val)
+        txt_id.config(state="readonly")
+
     # Stylistic transparent layout variables
     bg_transparent = "#7da9ad" # Blends with counceler.jpeg
     text_dark = "#0f172a"
@@ -75,8 +91,14 @@ def main():
 
     # Left Column
     Label(root, text="Counselor ID", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=720, y=100)
-    txt_id = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_id.place(x=720, y=125, height=30)
+    txt_id = Entry(root, font=("Arial", 11), bd=1, highlightthickness=1, highlightbackground="#94a3b8")
+    txt_id.place(x=720, y=125, width=170, height=30)
+    
+    btn_gen = Button(root, text="🔄 Gen", fg="white", bg=accent_purple, font=("Arial", 9, "bold"), bd=0, cursor="hand2", command=regenerate_id)
+    btn_gen.place(x=900, y=125, width=80, height=30)
+    
+    txt_id.insert(0, generate_unique_id())
+    txt_id.config(state="readonly")
 
     Label(root, text="Name", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=720, y=180)
     txt_name = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")

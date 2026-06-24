@@ -12,7 +12,7 @@ def main():
     con = _mysql_connector.connect(
         host="localhost",
         user="root",
-        password="123456789",
+        password="asit@0987",
         database="ocac"
     )
     cursor = con.cursor()
@@ -34,16 +34,18 @@ def main():
             messagebox.showerror("Error", "Username is required!😟")
             return
 
-        cursor.execute("SELECT name, status FROM students WHERE username = %s", (username,))
+        cursor.execute("SELECT name, student_id, status FROM students WHERE username = %s", (username,))
         result = cursor.fetchone()
 
         if result:
-            name, status = result
+            name, student_id, status = result
             if status != "Accepted":
                 messagebox.showerror("Access Denied", "Your account is pending admin approval.😟")
             else:
                 messagebox.showinfo("Success", f"Welcome Student {name}!🤗")
                 root.destroy()
+                from student import studentdash_board
+                studentdash_board.main(name, student_id)
         else:
             messagebox.showerror("Error", "Invalid Username or Password!😱")
 
@@ -72,7 +74,7 @@ def main():
     txt_password = Entry(root, show="*", font=("Arial", 12), width=30, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
     txt_password.place(x=1000, y=330, height=30)
 
-    Button(root, text="← Back", fg="white", bg="#334155", font=("Arial", 11, "bold"), command=back).place(x=50, y=520, width=120, height=30)
+    Button(root, text="← Back to Home", fg="white", bg="red", font=("Arial", 10, "bold"), bd=0, cursor="hand2", command=back).place(x=50, y=50, width=140, height=35)
 
     Button(root, text="LOGIN AS STUDENT", fg="white", bg=accent_teal, activebackground="#0f766e", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=login_action).place(x=1000, y=410, width=300, height=40)
 

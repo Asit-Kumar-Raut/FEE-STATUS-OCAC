@@ -1,11 +1,10 @@
 from tkinter import *
-from PIL import Image, ImageTk
 import mysql.connector as _mysql_connector
 from tkinter import messagebox
 
 def main(admin_name, admin_id):
     root = Tk()
-    root.title("Student Management")
+    root.title("Approved Student Management")
     root.geometry("1366x768+0+0")
     root.resizable(False, False)
     root.config(bg="white")
@@ -28,13 +27,6 @@ def main(admin_name, admin_id):
         from admin import student_approval_option
         student_approval_option.main(admin_name, admin_id)
 
-    def accept_student(sid):
-        cursor.execute("UPDATE students SET status = 'Accepted' WHERE student_id = %s", (sid,))
-        con.commit()
-        messagebox.showinfo("Success", f"Student ID {sid} has been accepted successfully!🤗")
-        root.destroy()
-        main(admin_name, admin_id)
-
     def delete_student(sid):
         ans = messagebox.askyesno("Confirm Delete", f"Are you sure you want to delete Student ID {sid}?")
         if ans:
@@ -55,7 +47,7 @@ def main(admin_name, admin_id):
     btn_back = Button(root, text="← BACK", fg="white", bg="#475569", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=back_action)
     btn_back.place(x=30, y=80, width=100, height=35)
 
-    lbl_title = Label(root, text="STUDENTS REGISTRATION LIST", fg="#1e293b", bg="white", font=("Segoe UI", 20, "bold"))
+    lbl_title = Label(root, text="APPROVED STUDENTS LIST", fg="#1e293b", bg="white", font=("Segoe UI", 20, "bold"))
     lbl_title.place(x=480, y=80)
 
     # Table Column Headers
@@ -70,11 +62,11 @@ def main(admin_name, admin_id):
     Label(root, text="Status", font=("Segoe UI", 10, "bold"), fg="#1e293b", bg="white").place(x=910, y=140)
     Label(root, text="Actions", font=("Segoe UI", 10, "bold"), fg="#1e293b", bg="white").place(x=1050, y=140)
 
-    cursor.execute("SELECT student_id, name, username, phonenumber, emailid, course, academic_year, semester, status FROM students WHERE status = 'Pending'")
+    cursor.execute("SELECT student_id, name, username, phonenumber, emailid, course, academic_year, semester, status FROM students WHERE status = 'Accepted'")
     students = cursor.fetchall()
 
     if not students:
-        Label(root, text="No pending students found.", fg="#64748b", bg="white", font=("Segoe UI", 14, "bold")).place(x=500, y=250)
+        Label(root, text="No approved students found.", fg="#64748b", bg="white", font=("Segoe UI", 14, "bold")).place(x=500, y=250)
     else:
         # Loop and display each row directly using a y coordinate
         y = 180
@@ -90,25 +82,16 @@ def main(admin_name, admin_id):
             Label(root, text=year, font=("Segoe UI", 9), fg="#1e293b", bg="white").place(x=730, y=y)
             Label(root, text=sem, font=("Segoe UI", 9), fg="#1e293b", bg="white").place(x=830, y=y)
 
-            status_color = "#d97706" if status == "Pending" else "#059669"
+            status_color = "#059669"
             Label(root, text=status, font=("Segoe UI", 9, "bold"), fg=status_color, bg="white").place(x=910, y=y)
-
-            # Simple helper functions to trigger command for specific ID
-            def make_accept_cmd(sid):
-                def cmd():
-                    accept_student(sid)
-                return cmd
 
             def make_delete_cmd(sid):
                 def cmd():
                     delete_student(sid)
                 return cmd
 
-            btn_accept = Button(root, text="Accept", fg="white", bg="#10b981", font=("Segoe UI", 8, "bold"), bd=0, cursor="hand2", command=make_accept_cmd(s_id))
-            btn_accept.place(x=1010, y=y, width=70, height=25)
-
             btn_delete = Button(root, text="Delete", fg="white", bg="#ef4444", font=("Segoe UI", 8, "bold"), bd=0, cursor="hand2", command=make_delete_cmd(s_id))
-            btn_delete.place(x=1090, y=y, width=70, height=25)
+            btn_delete.place(x=1050, y=y, width=70, height=25)
 
             y += 40
 

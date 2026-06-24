@@ -1,0 +1,86 @@
+from tkinter import *
+import mysql.connector as _mysql_connector
+from tkinter import messagebox
+
+def main(counselor_name, counselor_id, student_id):
+    root = Tk()
+    root.title("Counselor Feedback to Admin")
+    root.geometry("1366x768+0+0")
+    root.resizable(False, False)
+    root.config(bg="white")
+
+    con = _mysql_connector.connect(
+        host="localhost",
+        user="root",
+        password="asit@0987",
+        database="ocac"
+    )
+    cursor = con.cursor()
+
+    def logout_action():
+        root.destroy()
+        from counsiler import counsiler_login
+        counsiler_login.main()
+
+    def back_action():
+        root.destroy()
+        if student_id != "":
+            from counsiler import counciler_student
+            counciler_student.main(counselor_name, counselor_id, student_id)
+        else:
+            from counsiler import counciler_dashboard
+            counciler_dashboard.main(counselor_name, counselor_id)
+
+    def submit_feedback():
+        s_id = txt_sid.get().strip()
+        message_text = txt_message.get("1.0", END).strip()
+
+        if s_id == "":
+            messagebox.showerror("Error", "Student ID is required!😟")
+            return
+
+        if message_text == "":
+            messagebox.showerror("Error", "Notice content cannot be empty!😟")
+            return
+
+        sql = "INSERT INTO counselor_feedback (counselor_id, counselor_name, student_id, message) VALUES (%s, %s, %s, %s)"
+        cursor.execute(sql, (counselor_id, counselor_name, s_id, message_text))
+        con.commit()
+
+        messagebox.showinfo("Success", "Notice sent to Admin successfully!🤗")
+        back_action()
+
+    # Header
+    lbl_counselor = Label(root, text=f"🎓 COUNSELOR PROFILE: {counselor_name} (ID: {counselor_id})", fg="#8b5cf6", bg="white", font=("Segoe UI", 12, "bold"))
+    lbl_counselor.place(x=30, y=15)
+
+    btn_logout = Button(root, text="LOG OUT", fg="white", bg="#ef4444", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=logout_action)
+    btn_logout.place(x=1200, y=12, width=100, height=35)
+
+    btn_back = Button(root, text="← BACK", fg="white", bg="#475569", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=back_action)
+    btn_back.place(x=30, y=80, width=100, height=35)
+
+    title_label = Label(root, text="SEND MISTAKE / ADJUSTMENT NOTICE TO ADMIN", fg="#1e293b", bg="white", font=("Segoe UI", 22, "bold"))
+    title_label.place(x=350, y=80)
+
+    # Form components
+    Label(root, text="Report incorrect payment logs or student adjustments directly to the Admin below.", font=("Segoe UI", 12), fg="#475569", bg="white").place(x=333, y=180)
+    
+    Label(root, text=f"Counselor ID: {counselor_id}", font=("Segoe UI", 11, "bold"), fg="#1e293b", bg="white").place(x=333, y=220)
+    
+    Label(root, text="Student ID:", font=("Segoe UI", 11, "bold"), fg="#1e293b", bg="white").place(x=550, y=220)
+    txt_sid = Entry(root, font=("Segoe UI", 11), bd=1, highlightthickness=1, highlightbackground="#cbd5e1", bg="white", fg="#1e293b", insertbackground="black")
+    txt_sid.place(x=650, y=218, width=120, height=26)
+    if student_id != "":
+        txt_sid.insert(0, student_id)
+        txt_sid.config(state="readonly")
+
+    Label(root, text="Enter description of mistake or correction required:", font=("Segoe UI", 11, "bold"), fg="#3b82f6", bg="white").place(x=333, y=260)
+
+    txt_message = Text(root, font=("Segoe UI", 11), bd=1, highlightthickness=1, highlightbackground="#cbd5e1", bg="white", fg="#1e293b", insertbackground="black")
+    txt_message.place(x=333, y=290, width=700, height=250)
+
+    btn_submit = Button(root, text="SEND NOTICE TO ADMIN", fg="white", bg="#0d9488", activebackground="#0f766e", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=submit_feedback)
+    btn_submit.place(x=333, y=560, width=700, height=45)
+
+    root.mainloop()
