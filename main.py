@@ -26,26 +26,12 @@ def main():
     card = Frame(root, bg="#0f172a", bd=1, highlightbackground="#1e293b", highlightthickness=1)
     card.place(x=443, y=190, width=480, height=380)
 
-<<<<<<< Updated upstream
     # RENDER CREDITS
     Label(card, text="🌟 SYSTEM DEVELOPED BY 🌟", fg="#f59e0b", bg="#0f172a", font=("Segoe UI", 15, "bold")).pack(pady=(20, 10))
     Label(card, text="ASIT KUMAR RAUT\n(Team Leader)", fg="#10b981", bg="#0f172a", font=("Segoe UI", 16, "bold"), justify=CENTER).pack(pady=10)
     Label(card, text="BISHWA PRAKASH ROUT", fg="#f8fafc", bg="#0f172a", font=("Segoe UI", 13, "bold")).pack(pady=5)
     Label(card, text="AKASH KUMAR SWAIN", fg="#f8fafc", bg="#0f172a", font=("Segoe UI", 13, "bold")).pack(pady=5)
     Label(card, text="ADITYA KUMAR SAHOO", fg="#f8fafc", bg="#0f172a", font=("Segoe UI", 13, "bold")).pack(pady=5)
-=======
-
-    # Render credits header directly on canvas
-    canvas.create_text(683, 270, text="🌟 SYSTEM DEVELOPED BY 🌟", fill="#f59e0b", font=("Segoe UI", 15, "bold"), anchor=CENTER)
-
-    # Team Members
-    canvas.create_text(683, 330, text="ASIT KUMAR RAUT", fill="#10b981", font=("Segoe UI", 18, "bold"), anchor=CENTER)
-    canvas.create_text(683, 360, text="(Team Leader)", fill="#10b981", font=("Segoe UI", 11, "italic"), anchor=CENTER)
-
-    canvas.create_text(683, 410, text="BISHWA PRAKASH ROUT", fill=text_color, font=("Segoe UI", 14, "bold"), anchor=CENTER)
-    canvas.create_text(683, 445, text="AKASH KUMAR SWAIN", fill=text_color, font=("Segoe UI", 14, "bold"), anchor=CENTER)
-    canvas.create_text(683, 480, text="ADITYA KUMAR SAHOO", fill=text_color, font=("Segoe UI", 14, "bold"), anchor=CENTER)
->>>>>>> Stashed changes
 
     # PROCEED BUTTON
     btn_proceed = Button(card, text="PROCEED  →", fg="white", bg="#059669", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=launch_home)
