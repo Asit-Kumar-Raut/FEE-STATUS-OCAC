@@ -51,14 +51,17 @@ def main():
         cursor.execute("SELECT * FROM students WHERE student_id = %s", (s_id,))
         if cursor.fetchone():
             messagebox.showerror("Error", "Student ID already registered!😱")
+            txt_id.delete(0, END)
             return
 
         if len(phone) != 10 or not phone.isdigit() or phone == "0000000000":
             messagebox.showerror("Error", "Invalid Phone Number!😱")
+            txt_phone.delete(0, END)
             return
 
         if len(password) < 8:
             messagebox.showerror("Error", "Password must be at least 8 characters!😱")
+            txt_password.delete(0, END)
             return
 
         sql = "INSERT INTO students(student_id, name, username, phonenumber, emailid, course, academic_year, semester, password, status) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,'Pending')"

@@ -41,9 +41,11 @@ def main():
 
         if admin_id == "":
             messagebox.showerror("Error", "Admin ID is required😟")
+            txt_password.delete(0, END)
             return
         elif name == "":
             messagebox.showerror("Error", "Name is required😫")
+           
             return
         elif username == "":
             messagebox.showerror("Error", "Username is required😫")
@@ -53,9 +55,11 @@ def main():
             return
         elif contact == "":
             messagebox.showerror("Error", "Contact Number is required😣")
+            txt_contact.delete(0, END)
             return
         elif password == "":
             messagebox.showerror("Error", "Password is required🫣")
+            txt_password.delete(0, END)
             return
 
         # ID validation
@@ -63,6 +67,7 @@ def main():
         for char in admin_id:
             if char not in valid_id_digits:
                 messagebox.showerror("Error", "Admin ID must contain numbers only.😱")
+                txt_id.delete(0, END)
                 return
         
         if all(c == '0' for c in admin_id):
@@ -78,9 +83,11 @@ def main():
         # Contact validation
         if len(contact) != 10 or not contact.isdigit():
             messagebox.showerror("Error", "Contact number must be exactly 10 digits.😱")
+            txt_contact.delete(0, END)
             return
         if contact == "0000000000":
             messagebox.showerror("Error", "Contact number cannot be all zeros.😱")
+            txt_contact.delete(0, END)
             return
 
         cursor.execute("SELECT * FROM admins WHERE contact = %s", (contact,))

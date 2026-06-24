@@ -42,19 +42,23 @@ def main():
 
         if not c_id.isdigit() or all(c == '0' for c in c_id):
             messagebox.showerror("Error", "Invalid Counselor ID!😱")
+            txt_id.delete(0, END)
             return
 
         cursor.execute("SELECT * FROM counselors WHERE counselor_id = %s", (c_id,))
         if cursor.fetchone():
             messagebox.showerror("Error", "Counselor ID already registered!😱")
+            txt_id.delete(0, END)
             return
 
         if len(contact) != 10 or not contact.isdigit() or contact == "0000000000":
             messagebox.showerror("Error", "Invalid Contact Number!😱")
+            txt_contact.delete(0, END)
             return
 
         if len(password) < 8:
             messagebox.showerror("Error", "Password must be at least 8 characters!😱")
+            txt_password.delete(0, END)
             return
 
         sql = "INSERT INTO counselors(counselor_id, name, username, contact, password, status) VALUES (%s,%s,%s,%s,%s,'Pending')"
