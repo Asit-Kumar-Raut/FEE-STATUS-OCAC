@@ -24,7 +24,7 @@ def main():
     root.resizable(False, False)
 
     # BACKGROUND IMAGE
-    bg = Image.open(r"images\WhatsApp Image 2026-06-23 at 11.19.09 AM.jpeg")
+    bg = Image.open(r"images\home_college_background.jpeg")
     img = bg.resize((1366, 768), Image.Resampling.LANCZOS)
     background_photo = ImageTk.PhotoImage(img)
     
