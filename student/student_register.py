@@ -11,11 +11,7 @@ def main():
     con = _mysql_connector.connect(
         host="localhost",
         user="root",
-<<<<<<< Updated upstream
-        password="asit@0987",
-=======
         password="123456789",
->>>>>>> Stashed changes
         database="ocac"
     )
     cursor = con.cursor()
