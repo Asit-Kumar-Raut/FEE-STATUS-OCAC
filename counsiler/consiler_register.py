@@ -36,7 +36,7 @@ def main():
         contact = txt_contact.get()
         password = txt_password.get()
 
-        if c_id == "" or name == "" or username == "" or contact == "" or password == "":
+        if c_id == "" or name == "" or username == "" or contact == "":
             messagebox.showerror("Error", "All fields are required!😟")
             return
 
@@ -49,16 +49,17 @@ def main():
             messagebox.showerror("Error", "Counselor ID already registered!😱")
             return
 
+        cursor.execute("SELECT * FROM counselors WHERE username = %s", (username,))
+        if cursor.fetchone():
+            messagebox.showerror("Error", "Username already taken!😱")
+            return
+
         if len(contact) != 10 or not contact.isdigit() or contact == "0000000000":
             messagebox.showerror("Error", "Invalid Contact Number!😱")
             return
 
-        if len(password) < 8:
-            messagebox.showerror("Error", "Password must be at least 8 characters!😱")
-            return
-
-        sql = "INSERT INTO counselors(counselor_id, name, username, contact, password, status) VALUES (%s,%s,%s,%s,%s,'Pending')"
-        cursor.execute(sql, (c_id, name, username, contact, password))
+        sql = "INSERT INTO counselors(counselor_id, name, username, contact, status) VALUES (%s,%s,%s,%s,'Pending')"
+        cursor.execute(sql, (c_id, name, username, contact))
         con.commit()
 
         messagebox.showinfo("Success", "Registration submitted! Admin approval required to log in.🤗")

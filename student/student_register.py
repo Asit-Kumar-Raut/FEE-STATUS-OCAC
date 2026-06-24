@@ -40,7 +40,7 @@ def main():
         sem = txt_sem.get()
         password = txt_password.get()
 
-        if s_id == "" or name == "" or username == "" or phone == "" or email == "" or course == "" or year == "" or sem == "" or password == "":
+        if s_id == "" or name == "" or username == "" or phone == "" or email == "" or course == "" or year == "" or sem == "":
             messagebox.showerror("Error", "All fields are required!😟")
             return
 
@@ -53,16 +53,17 @@ def main():
             messagebox.showerror("Error", "Student ID already registered!😱")
             return
 
+        cursor.execute("SELECT * FROM students WHERE username = %s", (username,))
+        if cursor.fetchone():
+            messagebox.showerror("Error", "Username already taken!😱")
+            return
+
         if len(phone) != 10 or not phone.isdigit() or phone == "0000000000":
             messagebox.showerror("Error", "Invalid Phone Number!😱")
             return
 
-        if len(password) < 8:
-            messagebox.showerror("Error", "Password must be at least 8 characters!😱")
-            return
-
-        sql = "INSERT INTO students(student_id, name, username, phonenumber, emailid, course, academic_year, semester, password, status) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,'Pending')"
-        cursor.execute(sql, (s_id, name, username, phone, email, course, year, sem, password))
+        sql = "INSERT INTO students(student_id, name, username, phonenumber, emailid, course, academic_year, semester, status) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,'Pending')"
+        cursor.execute(sql, (s_id, name, username, phone, email, course, year, sem))
         con.commit()
 
         messagebox.showinfo("Success", "Registration submitted! Admin approval required to log in.🤗")

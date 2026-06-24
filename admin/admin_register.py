@@ -75,6 +75,12 @@ def main():
             messagebox.showerror("Error", "This Admin ID is already registered.😱")
             return
 
+        # Check existing username
+        cursor.execute("SELECT * FROM admins WHERE username = %s", (username,))
+        if cursor.fetchone():
+            messagebox.showerror("Error", "Username already taken.😱")
+            return
+
         # Contact validation
         if len(contact) != 10 or not contact.isdigit():
             messagebox.showerror("Error", "Contact number must be exactly 10 digits.😱")
@@ -88,13 +94,9 @@ def main():
             messagebox.showerror("Error", "This contact number is already registered.😱")
             return
 
-        if len(password) < 8:
-            messagebox.showerror("Error", "Password must be at least 8 characters long.😱")
-            return
-
         # Insert record
-        sql = "INSERT INTO admins(admin_id, name, username, email, contact, password) VALUES (%s,%s,%s,%s,%s,%s)"
-        cursor.execute(sql, (admin_id, name, username, email, contact, password))
+        sql = "INSERT INTO admins(admin_id, name, username, email, contact) VALUES (%s,%s,%s,%s,%s)"
+        cursor.execute(sql, (admin_id, name, username, email, contact))
         con.commit()
 
         messagebox.showinfo("Success", "Admin registered successfully! Now you can login🤗")
