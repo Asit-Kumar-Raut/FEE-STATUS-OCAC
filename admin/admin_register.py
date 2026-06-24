@@ -13,7 +13,7 @@ def main():
     con = _mysql_connector.connect(
         host="localhost",
         user="root",
-        password="asit@0987",
+        password="AKASH12",
         database="ocac"
     )
     cursor = con.cursor()
