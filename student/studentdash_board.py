@@ -86,7 +86,6 @@ def main(name, student_id):
     btn_feedback.bind("<Enter>", lambda e: btn_feedback.config(bg="#7c3aed"))
     btn_feedback.bind("<Leave>", lambda e: btn_feedback.config(bg="#8b5cf6"))
 
-    # RECEIPTS BUTTON
     btn_receipts = Button(root, text="🧾 VIEW PAYMENT RECEIPTS", fg="white", bg="#0d9488", activebackground="#0f766e", activeforeground="white", font=("Segoe UI", 11, "bold"), bd=0, cursor="hand2", command=view_receipts)
     btn_receipts.place(x=750, y=530, width=320, height=45)
     btn_receipts.bind("<Enter>", lambda e: btn_receipts.config(bg="#0f766e"))

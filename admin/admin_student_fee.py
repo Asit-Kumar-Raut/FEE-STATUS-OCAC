@@ -171,7 +171,6 @@ def main(admin_name, admin_id, student_id):
         from student import receipt
         receipt.main(student_id, role="admin", caller_name=admin_name, caller_id=admin_id)
 
-    # RECEIPTS BUTTON
     btn_receipts = Button(root, text="🧾 VIEW HISTORICAL RECEIPTS", fg="white", bg="#3b82f6", activebackground="#2563eb", activeforeground="white", font=("Segoe UI", 11, "bold"), bd=0, cursor="hand2", command=view_receipts)
     btn_receipts.place(x=150, y=530, width=280, height=45)
     btn_receipts.bind("<Enter>", lambda e: btn_receipts.config(bg="#2563eb"))
