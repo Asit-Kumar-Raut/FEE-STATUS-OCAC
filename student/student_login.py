@@ -29,12 +29,13 @@ def main():
 
     def login_action():
         username = txt_username.get()
+        password = txt_password.get()
 
-        if username == "":
-            messagebox.showerror("Error", "Username is required!😟")
+        if username == "" or password == "":
+            messagebox.showerror("Error", "All fields are required!😟")
             return
 
-        cursor.execute("SELECT name, student_id, status FROM students WHERE username = %s", (username,))
+        cursor.execute("SELECT name, student_id, status FROM students WHERE username = %s AND password = %s", (username, password))
         result = cursor.fetchone()
 
         if result:

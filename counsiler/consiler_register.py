@@ -36,7 +36,7 @@ def main():
         contact = txt_contact.get()
         password = txt_password.get()
 
-        if c_id == "" or name == "" or username == "" or contact == "":
+        if c_id == "" or name == "" or username == "" or contact == "" or password == "":
             messagebox.showerror("Error", "All fields are required!😟")
             return
 
@@ -58,8 +58,8 @@ def main():
             messagebox.showerror("Error", "Invalid Contact Number!😱")
             return
 
-        sql = "INSERT INTO counselors(counselor_id, name, username, contact, status) VALUES (%s,%s,%s,%s,'Pending')"
-        cursor.execute(sql, (c_id, name, username, contact))
+        sql = "INSERT INTO counselors(counselor_id, name, username, contact, password, status) VALUES (%s,%s,%s,%s,%s,'Pending')"
+        cursor.execute(sql, (c_id, name, username, contact, password))
         con.commit()
 
         messagebox.showinfo("Success", "Registration submitted! Admin approval required to log in.🤗")

@@ -13,7 +13,7 @@ con = _mysql_connector.connect(
 )
 cursor = con.cursor()
 
-def main(admin_name, admin_id):
+def main(admin_name="Admin User", admin_id="1"):
     root = Tk()
     root.title("password reset")
     root.geometry("768x600+0+0")
@@ -34,16 +34,17 @@ def main(admin_name, admin_id):
     def update():
         u = txt_username.get()
         uid = txt_userid.get()
+        cp = txt_currentpassword.get()
         np = txt_newpassword.get()
 
         # Check for empty fields
-        if u == "" or uid == "" or np == "":
+        if u == "" or uid == "" or cp == "" or np == "":
             messagebox.showerror("Error", "All fields are required!😟")
             return
 
-        # Check if the username and admin_id exist
-        sql = "SELECT * FROM admins WHERE username=%s AND admin_id=%s"
-        values = (u, uid)
+        # Check if the username, admin_id, and current password match
+        sql = "SELECT * FROM admins WHERE username=%s AND admin_id=%s AND password=%s"
+        values = (u, uid, cp)
         cursor.execute(sql, values)
         result = cursor.fetchone()
 
@@ -57,11 +58,11 @@ def main(admin_name, admin_id):
             login()  # Redirects to login page after successful reset
         else:
             # Show error and clear input fields if wrong credentials
-            messagebox.showerror("Error", "Username or User ID is incorrect!😱")
+            messagebox.showerror("Error", "Username, User ID, or Current Password is incorrect!😱")
             txt_username.delete(0, END)
             txt_userid.delete(0, END)
+            txt_currentpassword.delete(0, END)
             txt_newpassword.delete(0, END)
-
 
     # Header bar
     header_frame = Frame(root, bg="#1e293b")
@@ -76,19 +77,23 @@ def main(admin_name, admin_id):
     title_sub = Label(root, text="Update login password for security", font=("Segoe UI", 11), fg="#475569", bg=bg_color)
     title_sub.place(x=220, y=100)
 
-    Label(root, text="Username:", fg="#1e293b", bg=bg_color, font=("Segoe UI", 11, "bold")).place(x=220, y=180)
-    Label(root, text="User ID:", fg="#1e293b", bg=bg_color, font=("Segoe UI", 11, "bold")).place(x=220, y=240)
-    Label(root, text="New Password:", fg="#1e293b", bg=bg_color, font=("Segoe UI", 11, "bold")).place(x=220, y=300)
+    Label(root, text="Username:", fg="#1e293b", bg=bg_color, font=("Segoe UI", 11, "bold")).place(x=220, y=160)
+    Label(root, text="User ID:", fg="#1e293b", bg=bg_color, font=("Segoe UI", 11, "bold")).place(x=220, y=210)
+    Label(root, text="Current Password:", fg="#1e293b", bg=bg_color, font=("Segoe UI", 11, "bold")).place(x=220, y=260)
+    Label(root, text="New Password:", fg="#1e293b", bg=bg_color, font=("Segoe UI", 11, "bold")).place(x=220, y=310)
 
     # Entry Boxes
     txt_username = Entry(root, font=("Segoe UI", 12), bd=1, highlightthickness=1, highlightbackground="#cbd5e1", bg="white", fg="#1e293b", insertbackground="black")
-    txt_username.place(x=380, y=178, width=200, height=30)
+    txt_username.place(x=380, y=158, width=200, height=30)
 
     txt_userid = Entry(root, font=("Segoe UI", 12), bd=1, highlightthickness=1, highlightbackground="#cbd5e1", bg="white", fg="#1e293b", insertbackground="black")
-    txt_userid.place(x=380, y=238, width=200, height=30)
+    txt_userid.place(x=380, y=208, width=200, height=30)
+
+    txt_currentpassword = Entry(root, show="*", font=("Segoe UI", 12), bd=1, highlightthickness=1, highlightbackground="#cbd5e1", bg="white", fg="#1e293b", insertbackground="black")
+    txt_currentpassword.place(x=380, y=258, width=200, height=30)
 
     txt_newpassword = Entry(root, show="*", font=("Segoe UI", 12), bd=1, highlightthickness=1, highlightbackground="#cbd5e1", bg="white", fg="#1e293b", insertbackground="black")
-    txt_newpassword.place(x=380, y=298, width=200, height=30)
+    txt_newpassword.place(x=380, y=308, width=200, height=30)
 
     # Submit Button
     btn = Button(root, text="UPDATE PASSWORD", fg="white", bg="#3b82f6", activebackground="#2563eb", activeforeground="white", font=("Segoe UI", 11, "bold"), bd=0, cursor="hand2", command=update)

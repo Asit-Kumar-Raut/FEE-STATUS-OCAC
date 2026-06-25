@@ -23,7 +23,7 @@ def main():
     root.geometry("1366x768+0+0")
     root.resizable(False, False)
 
-    # BACKGROUND IMAGE
+
     bg = Image.open(r"images\home_college_background.jpeg")
     img = bg.resize((1366, 768), Image.Resampling.LANCZOS)
     background_photo = ImageTk.PhotoImage(img)
@@ -32,32 +32,32 @@ def main():
     background_label.image = background_photo
     background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
-    # CENTRAL OPTIONS CARD FRAME
+    
     card = Frame(root, bg="#0f172a", bd=1, highlightbackground="#1e293b", highlightthickness=1)
     card.place(x=443, y=190, width=480, height=380)
 
     Label(card, text="Role Selection", font=("Segoe UI", 15, "bold"), fg="#f8fafc", bg="#0f172a").pack(pady=(20, 3))
     Label(card, text="Please select your credential profile", font=("Segoe UI", 10), fg="#94a3b8", bg="#0f172a").pack(pady=(0, 20))
 
-    # ADMIN BUTTON (Blue Accent)
+  
     btn_admin = Button(card, text="Admin→", fg="white", bg="#3b82f6", activebackground="#2563eb", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=admin_registerpage)
     btn_admin.pack(pady=10, ipady=12, fill=X, padx=40)
     btn_admin.bind("<Enter>", lambda e: btn_admin.config(bg="#2563eb"))
     btn_admin.bind("<Leave>", lambda e: btn_admin.config(bg="#3b82f6"))
 
-    # COUNSELOR BUTTON (Purple Accent)
+  
     btn_counselor = Button(card, text="Counselor→", fg="white", bg="#8b5cf6", activebackground="#7c3aed", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=conciler_registerpage)
     btn_counselor.pack(pady=10, ipady=12, fill=X, padx=40)
     btn_counselor.bind("<Enter>", lambda e: btn_counselor.config(bg="#7c3aed"))
     btn_counselor.bind("<Leave>", lambda e: btn_counselor.config(bg="#8b5cf6"))
 
-    # STUDENT BUTTON (Teal Accent)
+    
     btn_student = Button(card, text="Student→", fg="white", bg="#0d9488", activebackground="#0f766e", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=student_registerpage)
     btn_student.pack(pady=10, ipady=12, fill=X, padx=40)
     btn_student.bind("<Enter>", lambda e: btn_student.config(bg="#0f766e"))
     btn_student.bind("<Leave>", lambda e: btn_student.config(bg="#0d9488"))
 
-    # TEAM MEMBERS WIDGET
+   
     team_text = "🌟 DEVELOPMENT TEAM\n• ASIT KUMAR RAUT (Team Leader)\n• BISHWA PRAKASH ROUT\n• AKASH KUMAR SWAIN\n• ADITYA KUMAR SAHOO"
     lbl_team = Label(root, text=team_text, fg="yellow", bg="#0f172a", font=("Segoe UI", 11, "bold"), justify=LEFT)
     lbl_team.place(x=1050, y=600)

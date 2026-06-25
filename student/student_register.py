@@ -42,7 +42,7 @@ def main():
         sem = txt_sem.get()
         password = txt_password.get()
 
-        if s_id == "" or name == "" or username == "" or phone == "" or email == "" or course == "" or year == "" or sem == "":
+        if s_id == "" or name == "" or username == "" or phone == "" or email == "" or course == "" or year == "" or sem == "" or password == "":
             messagebox.showerror("Error", "All fields are required!😟")
             return
 
@@ -70,8 +70,8 @@ def main():
             messagebox.showerror("Error", "Invalid Phone Number!😱")
             return
 
-        sql = "INSERT INTO students(student_id, name, username, phonenumber, emailid, course, academic_year, semester, status) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,'Pending')"
-        cursor.execute(sql, (s_id, name, username, phone, email, course, year, sem))
+        sql = "INSERT INTO students(student_id, name, username, phonenumber, emailid, course, academic_year, semester, password, status) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,'Pending')"
+        cursor.execute(sql, (s_id, name, username, phone, email, course, year, sem, password))
         con.commit()
 
         messagebox.showinfo("Success", "Registration submitted! Admin approval required to log in.🤗")

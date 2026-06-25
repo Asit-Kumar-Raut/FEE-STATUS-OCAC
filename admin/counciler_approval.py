@@ -32,7 +32,6 @@ def main(admin_name, admin_id):
         from admin import admin_login
         admin_login.main()
 
-    # Header bar
     header_frame = Frame(root, bg="#1e293b")
     header_frame.place(x=0, y=0, width=1366, height=60)
 
@@ -46,7 +45,7 @@ def main(admin_name, admin_id):
 
     Label(root, text="Counselor Management", fg="red", bg=bg_color, font=("Helvetica", 26, "bold")).place(x=400, y=100)
     
-    # submit button
+    
     btn_pending = Button(root, text="Counselor Pending List", fg="white", bg="red", activebackground="#b91c1c", activeforeground="white", font=("Helvetica", 30), cursor="hand2", command=pending)
     btn_pending.place(x=400, y=250, width=500, height=70)
     btn_pending.bind("<Enter>", lambda e: btn_pending.config(bg="#b91c1c"))

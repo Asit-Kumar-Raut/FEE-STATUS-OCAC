@@ -48,6 +48,11 @@ def main(name, student_id):
         from student import student_feed_back
         student_feed_back.main(name, student_id)
 
+    def view_receipts():
+        root.destroy()
+        from student import receipt
+        receipt.main(student_id, role="student", caller_name=name)
+
     # Header bar
     header_frame = Frame(root, bg="#1e293b")
     header_frame.place(x=0, y=0, width=1366, height=60)
@@ -80,6 +85,12 @@ def main(name, student_id):
     btn_feedback.place(x=150, y=530, width=320, height=45)
     btn_feedback.bind("<Enter>", lambda e: btn_feedback.config(bg="#7c3aed"))
     btn_feedback.bind("<Leave>", lambda e: btn_feedback.config(bg="#8b5cf6"))
+
+    # RECEIPTS BUTTON
+    btn_receipts = Button(root, text="🧾 VIEW PAYMENT RECEIPTS", fg="white", bg="#0d9488", activebackground="#0f766e", activeforeground="white", font=("Segoe UI", 11, "bold"), bd=0, cursor="hand2", command=view_receipts)
+    btn_receipts.place(x=750, y=530, width=320, height=45)
+    btn_receipts.bind("<Enter>", lambda e: btn_receipts.config(bg="#0f766e"))
+    btn_receipts.bind("<Leave>", lambda e: btn_receipts.config(bg="#0d9488"))
 
     # password update page
     btn_reset = Button(root, text="🔄 Reset Password", fg="white", bg="#7c3aed", activebackground="#6d28d9", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=change_password)
