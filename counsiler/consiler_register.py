@@ -94,8 +94,7 @@ def main():
     txt_id = Entry(root, font=("Arial", 11), bd=1, highlightthickness=1, highlightbackground="#94a3b8")
     txt_id.place(x=720, y=125, width=170, height=30)
     
-    btn_gen = Button(root, text="🔄 Gen", fg="white", bg=accent_purple, font=("Arial", 9, "bold"), bd=0, cursor="hand2", command=regenerate_id)
-    btn_gen.place(x=900, y=125, width=80, height=30)
+
     
     txt_id.insert(0, generate_unique_id())
     txt_id.config(state="readonly")
@@ -122,10 +121,20 @@ def main():
         import home
         home.main()
 
-    Button(root, text="← Back to Home", fg="white", bg="red", font=("Arial", 10, "bold"), bd=0, cursor="hand2", command=back).place(x=50, y=50, width=140, height=35)
+    btn_back = Button(root, text="← Back to Home", fg="white", bg="#ef4444", activebackground="#dc2626", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=back)
+    btn_back.place(x=50, y=50, width=140, height=35)
+    btn_back.bind("<Enter>", lambda e: btn_back.config(bg="#dc2626"))
+    btn_back.bind("<Leave>", lambda e: btn_back.config(bg="#ef4444"))
 
-    Button(root, text="REGISTER AS COUNSELOR", fg="white", bg=accent_purple, activebackground="#7c3aed", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=registration).place(x=900, y=360, width=300, height=45)
+    btn_register = Button(root, text="REGISTER AS COUNSELOR", fg="white", bg=accent_purple, activebackground="#6d28d9", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=registration)
+    btn_register.place(x=900, y=360, width=300, height=45)
+    btn_register.bind("<Enter>", lambda e: btn_register.config(bg="#6d28d9"))
+    btn_register.bind("<Leave>", lambda e: btn_register.config(bg=accent_purple))
     
     Label(root, text="Already registered?", fg=text_dark, bg=bg_transparent, font=("Helvetica", 11, "bold")).place(x=900, y=440, width=150)
-    Button(root, text="LOGIN HERE", fg="white", bg="red", font=("Arial", 11, "bold"), command=login).place(x=1070, y=440, width=120, height=30)
+    
+    btn_login = Button(root, text="LOGIN HERE", fg="white", bg="#ef4444", activebackground="#dc2626", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=login)
+    btn_login.place(x=1070, y=440, width=120, height=30)
+    btn_login.bind("<Enter>", lambda e: btn_login.config(bg="#dc2626"))
+    btn_login.bind("<Leave>", lambda e: btn_login.config(bg="#ef4444"))
     root.mainloop()

@@ -2,18 +2,18 @@ from tkinter import *
 import mysql.connector as _mysql_connector
 from tkinter import messagebox
 from PIL import Image, ImageTk
-from admin import admin_dashboard
+from counsiler import counciler_dashboard
 
 # Database connection
 con = _mysql_connector.connect(
     host="localhost",
     user="root",
-    password="adbi@123",
+    password="asit@0987",
     database="ocac"
 )
 cursor = con.cursor()
 
-def main(admin_name, admin_id):
+def main(counselor_name, counselor_id):
     root = Tk()
     root.title("password reset")
     root.geometry("768x600+0+0")
@@ -24,12 +24,12 @@ def main(admin_name, admin_id):
 
     def login():
         root.destroy()
-        from admin import admin_login
-        admin_login.main()
+        from counsiler import counsiler_login
+        counsiler_login.main()
 
     def back_to_dashboard():
         root.destroy()
-        admin_dashboard.main(admin_name, admin_id)
+        counciler_dashboard.main(counselor_name, counselor_id)
 
     def update():
         u = txt_username.get()
@@ -41,15 +41,15 @@ def main(admin_name, admin_id):
             messagebox.showerror("Error", "All fields are required!😟")
             return
 
-        # Check if the username and admin_id exist
-        sql = "SELECT * FROM admins WHERE username=%s AND admin_id=%s"
+        # Check if the username and counselor_id exist
+        sql = "SELECT * FROM  counselors  WHERE username=%s AND counselor_id=%s"
         values = (u, uid)
         cursor.execute(sql, values)
         result = cursor.fetchone()
 
         if result:
             # Update the password
-            sql = "UPDATE admins SET password=%s WHERE username=%s AND admin_id=%s"
+            sql = "UPDATE  counselors  SET password=%s WHERE username=%s AND counselor_id=%s"
             values = (np, u, uid)
             cursor.execute(sql, values)
             con.commit()
@@ -67,7 +67,7 @@ def main(admin_name, admin_id):
     header_frame = Frame(root, bg="#1e293b")
     header_frame.place(x=0, y=0, width=768, height=60)
 
-    lbl_title = Label(header_frame, text="🔑 RESET ADMIN PASSWORD", fg="#f8fafc", bg="#1e293b", font=("Segoe UI", 13, "bold"))
+    lbl_title = Label(header_frame, text="🔑 RESET COUNSELOR PASSWORD", fg="#f8fafc", bg="#1e293b", font=("Segoe UI", 13, "bold"))
     lbl_title.place(x=30, y=15)
 
     btn_back = Button(header_frame, text="← BACK", fg="white", bg="#475569", activebackground="#334155", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=back_to_dashboard)

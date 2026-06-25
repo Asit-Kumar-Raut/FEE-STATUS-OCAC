@@ -73,11 +73,21 @@ def main():
     txt_password = Entry(root, show="*", font=("Arial", 12), width=30, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
     txt_password.place(x=200, y=330, height=30)
 
-    Button(root, text="← Back", fg="white", bg="red", font=("Arial", 11, "bold"), command=back).place(x=50, y=50, width=140, height=35)
+    btn_back = Button(root, text="← Back", fg="white", bg="#ef4444", activebackground="#dc2626", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=back)
+    btn_back.place(x=50, y=50, width=140, height=35)
+    btn_back.bind("<Enter>", lambda e: btn_back.config(bg="#dc2626"))
+    btn_back.bind("<Leave>", lambda e: btn_back.config(bg="#ef4444"))
 
-    Button(root, text="LOGIN AS ADMIN", fg="white", bg=accent_blue, font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=login_action).place(x=200, y=410, width=300, height=40)
+    btn_login = Button(root, text="LOGIN AS ADMIN", fg="white", bg=accent_blue, activebackground="#1d4ed8", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=login_action)
+    btn_login.place(x=200, y=410, width=300, height=40)
+    btn_login.bind("<Enter>", lambda e: btn_login.config(bg="#1d4ed8"))
+    btn_login.bind("<Leave>", lambda e: btn_login.config(bg=accent_blue))
 
     Label(root, text="No account?", fg=text_dark, bg=bg_transparent, font=("Helvetica", 11, "bold")).place(x=150, y=520, width=180)
-    Button(root, text="REGISTER HERE", fg="white", bg="red", font=("Arial", 11, "bold"), command=register).place(x=300, y=520, width=140, height=30)
+    
+    btn_register = Button(root, text="REGISTER HERE", fg="white", bg="#ef4444", activebackground="#dc2626", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=register)
+    btn_register.place(x=300, y=520, width=140, height=30)
+    btn_register.bind("<Enter>", lambda e: btn_register.config(bg="#dc2626"))
+    btn_register.bind("<Leave>", lambda e: btn_register.config(bg="#ef4444"))
 
     root.mainloop()

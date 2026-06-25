@@ -7,7 +7,8 @@ def main(admin_name, admin_id):
     root.title("Counselor Feedbacks / Notices")
     root.geometry("1366x768+0+0")
     root.resizable(False, False)
-    root.config(bg="white")
+    bg_color = "#eff6ff"
+    root.config(bg=bg_color)
 
     con = _mysql_connector.connect(
         host="localhost",
@@ -41,27 +42,30 @@ def main(admin_name, admin_id):
         from admin import admin_student_fee
         admin_student_fee.main(admin_name, admin_id, sid)
 
-    # Header
-    lbl_admin = Label(root, text=f"🔑 ADMIN PROFILE: {admin_name} (ID: {admin_id})", fg="#3b82f6", bg="white", font=("Segoe UI", 12, "bold"))
+    # Header bar
+    header_frame = Frame(root, bg="#1e293b")
+    header_frame.place(x=0, y=0, width=1366, height=60)
+
+    lbl_admin = Label(header_frame, text=f"🔑 ADMIN PROFILE: {admin_name} (ID: {admin_id})", fg="#f8fafc", bg="#1e293b", font=("Segoe UI", 12, "bold"))
     lbl_admin.place(x=30, y=15)
 
-    btn_logout = Button(root, text="LOG OUT", fg="white", bg="#ef4444", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=logout_action)
-    btn_logout.place(x=1200, y=12, width=100, height=35)
+    btn_logout = Button(header_frame, text="LOG OUT", fg="white", bg="#ef4444", activebackground="#dc2626", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=logout_action)
+    btn_logout.place(x=1230, y=12, width=100, height=35)
 
     # Navigation & Title
     btn_back = Button(root, text="← BACK", fg="white", bg="#475569", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=back_action)
     btn_back.place(x=30, y=80, width=100, height=35)
 
-    lbl_title = Label(root, text="COUNSELOR ADJUSTMENT NOTICES", fg="#1e293b", bg="white", font=("Segoe UI", 20, "bold"))
+    lbl_title = Label(root, text="COUNSELOR ADJUSTMENT NOTICES", fg="#1e293b", bg=bg_color, font=("Segoe UI", 20, "bold"))
     lbl_title.place(x=480, y=80)
 
     # Table Column Headers
-    Label(root, text="Counselor ID", font=("Segoe UI", 10, "bold"), fg="#1e293b", bg="white").place(x=40, y=140)
-    Label(root, text="Couns. Name", font=("Segoe UI", 10, "bold"), fg="#1e293b", bg="white").place(x=150, y=140)
-    Label(root, text="Student ID", font=("Segoe UI", 10, "bold"), fg="#1e293b", bg="white").place(x=270, y=140)
-    Label(root, text="Notice Message", font=("Segoe UI", 10, "bold"), fg="#1e293b", bg="white").place(x=380, y=140)
-    Label(root, text="Submitted Date", font=("Segoe UI", 10, "bold"), fg="#1e293b", bg="white").place(x=900, y=140)
-    Label(root, text="Actions", font=("Segoe UI", 10, "bold"), fg="#1e293b", bg="white").place(x=1120, y=140)
+    Label(root, text="Counselor ID", font=("Segoe UI", 10, "bold"), fg="#1e293b", bg=bg_color).place(x=40, y=140)
+    Label(root, text="Couns. Name", font=("Segoe UI", 10, "bold"), fg="#1e293b", bg=bg_color).place(x=150, y=140)
+    Label(root, text="Student ID", font=("Segoe UI", 10, "bold"), fg="#1e293b", bg=bg_color).place(x=270, y=140)
+    Label(root, text="Notice Message", font=("Segoe UI", 10, "bold"), fg="#1e293b", bg=bg_color).place(x=380, y=140)
+    Label(root, text="Submitted Date", font=("Segoe UI", 10, "bold"), fg="#1e293b", bg=bg_color).place(x=900, y=140)
+    Label(root, text="Actions", font=("Segoe UI", 10, "bold"), fg="#1e293b", bg=bg_color).place(x=1120, y=140)
 
     # Divider line
     Frame(root, bg="#cbd5e1", height=2).place(x=20, y=170, width=1326)
@@ -70,20 +74,20 @@ def main(admin_name, admin_id):
     feedbacks = cursor.fetchall()
 
     if not feedbacks:
-        Label(root, text="No counselor feedback notices found.", fg="#64748b", bg="white", font=("Segoe UI", 14, "bold")).place(x=500, y=250)
+        Label(root, text="No counselor feedback notices found.", fg="#64748b", bg=bg_color, font=("Segoe UI", 14, "bold")).place(x=500, y=250)
     else:
         y = 180
         for fb in feedbacks:
             fb_id, cid, cname, sid, msg, dt = fb
 
-            Label(root, text=cid, font=("Segoe UI", 9), fg="#1e293b", bg="white").place(x=40, y=y)
-            Label(root, text=cname, font=("Segoe UI", 9), fg="#1e293b", bg="white").place(x=150, y=y)
-            Label(root, text=sid, font=("Segoe UI", 9), fg="#1e293b", bg="white").place(x=270, y=y)
+            Label(root, text=cid, font=("Segoe UI", 9), fg="#1e293b", bg=bg_color).place(x=40, y=y)
+            Label(root, text=cname, font=("Segoe UI", 9), fg="#1e293b", bg=bg_color).place(x=150, y=y)
+            Label(root, text=sid, font=("Segoe UI", 9), fg="#1e293b", bg=bg_color).place(x=270, y=y)
             
-            lbl_msg = Label(root, text=msg, font=("Segoe UI", 9), fg="#1e293b", bg="white", justify=LEFT, anchor=W, wraplength=500)
+            lbl_msg = Label(root, text=msg, font=("Segoe UI", 9), fg="#1e293b", bg=bg_color, justify=LEFT, anchor=W, wraplength=500)
             lbl_msg.place(x=380, y=y)
 
-            Label(root, text=str(dt), font=("Segoe UI", 9), fg="#1e293b", bg="white").place(x=900, y=y)
+            Label(root, text=str(dt), font=("Segoe UI", 9), fg="#1e293b", bg=bg_color).place(x=900, y=y)
 
             # Simple helper bindings
             def make_adjust_cmd(sid_val):

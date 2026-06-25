@@ -2,6 +2,8 @@ from tkinter import *
 from PIL import Image, ImageTk
 import mysql.connector as _mysql_connector
 from tkinter import messagebox
+from tkinter import ttk
+import datetime
 def main():
     root = Tk()
     root.title("Student Registration")
@@ -35,13 +37,19 @@ def main():
         username = txt_username.get()
         phone = txt_phone.get()
         email = txt_email.get()
-        course = txt_course.get()
-        year = txt_year.get()
+        course = cb_course.get()
+        year = cb_year.get()
         sem = txt_sem.get()
         password = txt_password.get()
 
         if s_id == "" or name == "" or username == "" or phone == "" or email == "" or course == "" or year == "" or sem == "":
             messagebox.showerror("Error", "All fields are required!😟")
+            return
+
+        current_year = datetime.datetime.now().year
+        valid_years = [str(current_year - i) for i in range(4)]
+        if year not in valid_years:
+            messagebox.showerror("Error", f"Academic Year must be one of the last 4 years: {', '.join(valid_years)}!😟")
             return
 
         if not s_id.isdigit() or all(c == '0' for c in s_id):
@@ -100,12 +108,14 @@ def main():
 
     # Right Column Inputs
     Label(root, text="Course", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=420, y=100)
-    txt_course = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_course.place(x=420, y=125, height=30)
+    cb_course = ttk.Combobox(root, values=["Btech", "Bsc", "BCA", "BBA", "Diploma", "BSC nursing", "Mtech", "MBA", "MCA", "PHD"], font=("Arial", 11), state="readonly", width=30)
+    cb_course.place(x=420, y=125, height=30)
 
     Label(root, text="Academic Year", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=420, y=180)
-    txt_year = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
-    txt_year.place(x=420, y=205, height=30)
+    current_year = datetime.datetime.now().year
+    years_list = [str(current_year - i) for i in range(4)]
+    cb_year = ttk.Combobox(root, values=years_list, font=("Arial", 11), state="readonly", width=30)
+    cb_year.place(x=420, y=205, height=30)
 
     Label(root, text="Semester", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=420, y=260)
     txt_sem = Entry(root, font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
@@ -120,11 +130,21 @@ def main():
         import home
         home.main()
 
-    Button(root, text="← Back to Home", fg="white", bg="red", font=("Arial", 10, "bold"), bd=0, cursor="hand2", command=back).place(x=50, y=50, width=140, height=35)
+    btn_back = Button(root, text="← Back to Home", fg="white", bg="#ef4444", activebackground="#dc2626", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=back)
+    btn_back.place(x=50, y=50, width=140, height=35)
+    btn_back.bind("<Enter>", lambda e: btn_back.config(bg="#dc2626"))
+    btn_back.bind("<Leave>", lambda e: btn_back.config(bg="#ef4444"))
 
-    Button(root, text="REGISTER STUDENT", fg="white", bg=accent_teal, activebackground="#0f766e", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=registration).place(x=200, y=530, width=300, height=45)
+    btn_register = Button(root, text="REGISTER STUDENT", fg="white", bg=accent_teal, activebackground="#0f766e", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=registration)
+    btn_register.place(x=200, y=530, width=300, height=45)
+    btn_register.bind("<Enter>", lambda e: btn_register.config(bg="#0f766e"))
+    btn_register.bind("<Leave>", lambda e: btn_register.config(bg=accent_teal))
     
     Label(root, text="Already registered?", fg=text_dark, bg=bg_transparent, font=("Helvetica", 11, "bold")).place(x=200, y=610, width=150)
-    Button(root, text="LOGIN HERE", fg="white", bg="red", font=("Arial", 11, "bold"), command=login).place(x=370, y=610, width=120, height=30)
+    
+    btn_login = Button(root, text="LOGIN HERE", fg="white", bg="#ef4444", activebackground="#dc2626", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=login)
+    btn_login.place(x=370, y=610, width=120, height=30)
+    btn_login.bind("<Enter>", lambda e: btn_login.config(bg="#dc2626"))
+    btn_login.bind("<Leave>", lambda e: btn_login.config(bg="#ef4444"))
 
     root.mainloop()
