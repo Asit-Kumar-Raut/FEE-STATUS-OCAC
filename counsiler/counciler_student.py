@@ -12,7 +12,7 @@ def main(counselor_name, counselor_id, student_id):
     con = _mysql_connector.connect(
         host="localhost",
         user="root",
-        password="asit@0987",
+        password="adbi@123",
         database="ocac"
     )
     cursor = con.cursor()
