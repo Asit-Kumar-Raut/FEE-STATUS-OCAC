@@ -8,8 +8,15 @@ def main(counselor_name, counselor_id):
     root.title("Counselor Dashboard")
     root.geometry("1366x768+0+0")
     root.resizable(False, False)
-    bg_color = "#eff6ff"
+    bg_color = "#eef2ff"
     root.config(bg=bg_color)
+
+    # Decorative background accent elements
+    left_bar = Frame(root, bg="#6366f1")  # Beautiful Indigo left bar
+    left_bar.place(x=0, y=60, width=12, height=708)
+    
+    top_accent = Frame(root, bg="#6366f1")  # Top accent line below the header
+    top_accent.place(x=0, y=60, width=1366, height=4)
 
     con = _mysql_connector.connect(
         host="localhost",
@@ -118,8 +125,11 @@ def main(counselor_name, counselor_id):
     btn_logout.bind("<Leave>", lambda e: btn_logout.config(bg="#ef4444"))
 
 
-    title_label = Label(root, text="COUNSELOR CONTROL DASHBOARD", fg="#1e293b", bg=bg_color, font=("Segoe UI", 24, "bold"))
+    title_label = Label(root, text="COUNSELOR CONTROL DASHBOARD", fg="#4f46e5", bg=bg_color, font=("Segoe UI", 24, "bold"))
     title_label.place(x=480, y=80)
+
+    title_accent = Frame(root, bg="#818cf8")
+    title_accent.place(x=480, y=128, width=540, height=3)
 
     # Student Counts statistics
     cursor.execute("SELECT COUNT(*) FROM students WHERE status = 'Accepted'")
