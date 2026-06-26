@@ -25,7 +25,7 @@ def main():
     card.place(x=443, y=190, width=480, height=380)
 
 
-    Label(card, text="🌟 SYSTEM DEVELOPED BY 🌟", fg="#f59e0b", bg="#0f172a", font=("Segoe UI", 15, "bold")).pack(pady=(20, 10))
+    Label(card, text="🌟DEVELOPED BY 🌟", fg="#f59e0b", bg="#0f172a", font=("Segoe UI", 15, "bold")).pack(pady=(20, 10))
     Label(card, text="ASIT KUMAR RAUT\n(Team Leader)", fg="#10b981", bg="#0f172a", font=("Segoe UI", 16, "bold"), justify=CENTER).pack(pady=10)
     Label(card, text="BISHWA PRAKASH ROUT", fg="#f8fafc", bg="#0f172a", font=("Segoe UI", 13, "bold")).pack(pady=5)
     Label(card, text="AKASH KUMAR SWAIN", fg="#f8fafc", bg="#0f172a", font=("Segoe UI", 13, "bold")).pack(pady=5)
