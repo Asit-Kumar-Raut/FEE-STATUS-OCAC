@@ -71,10 +71,26 @@ def main():
         import app
         app.main()
         
+    def show_contact_info():
+        from tkinter import messagebox
+        messagebox.showinfo(
+            "Contact Support",
+            "📞 FOR ANY QUERIES OR SUPPORT, CONTACT:\n\n"
+            "• +91 98612 16929\n"
+            "• +91 89846 76600\n"
+            "• +91 99384 21203\n"
+            "• +91 98618 46536"
+        )
+        
     btn_back = Button(root, text="← Back", fg="white", bg="#ef4444", activebackground="#dc2626", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=back)
-    btn_back.place(x=600, y=640, width=140, height=35)
+    btn_back.place(x=513, y=640, width=140, height=35)
     btn_back.bind("<Enter>", lambda e: btn_back.config(bg="#dc2626"))
     btn_back.bind("<Leave>", lambda e: btn_back.config(bg="#ef4444"))
+
+    btn_contact = Button(root, text="📞 Contact Support", fg="white", bg="#0d9488", activebackground="#0f766e", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=show_contact_info)
+    btn_contact.place(x=673, y=640, width=180, height=35)
+    btn_contact.bind("<Enter>", lambda e: btn_contact.config(bg="#0f766e"))
+    btn_contact.bind("<Leave>", lambda e: btn_contact.config(bg="#0d9488"))
     root.mainloop()
 
 if __name__ == "__main__":
