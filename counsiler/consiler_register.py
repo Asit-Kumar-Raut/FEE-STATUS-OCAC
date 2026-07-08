@@ -1,20 +1,15 @@
 from tkinter import *
 from PIL import Image, ImageTk
-import mysql.connector as _mysql_connector
 from tkinter import messagebox
+from tkinter import ttk
+import random
+import db
+
 def main():
     root = Tk()
     root.title("Counselor Registration")
     root.geometry("1366x768+0+0")
     root.resizable(False, False)
-
-    con = _mysql_connector.connect(
-        host="localhost",
-        user="root",
-        password="asit@0987",
-        database="ocac"
-    )
-    cursor = con.cursor()
 
     def login():
         root.destroy()
@@ -31,12 +26,13 @@ def main():
 
     def registration():
         c_id = txt_id.get()
-        name = txt_name.get()
-        username = txt_username.get()
-        contact = txt_contact.get()
+        name = txt_name.get().strip()
+        username = txt_username.get().strip()
+        contact = txt_contact.get().strip()
         password = txt_password.get()
+        college_name = cb_college.get()
 
-        if c_id == "" or name == "" or username == "" or contact == "" or password == "":
+        if c_id == "" or name == "" or username == "" or contact == "" or password == "" or college_name == "":
             messagebox.showerror("Error", "All fields are required!😟")
             return
 
@@ -44,13 +40,11 @@ def main():
             messagebox.showerror("Error", "Invalid Counselor ID!😱")
             return
 
-        cursor.execute("SELECT * FROM counselors WHERE counselor_id = %s", (c_id,))
-        if cursor.fetchone():
+        if db.get_counselor(c_id):
             messagebox.showerror("Error", "Counselor ID already registered!😱")
             return
 
-        cursor.execute("SELECT * FROM counselors WHERE username = %s", (username,))
-        if cursor.fetchone():
+        if db.get_counselor_by_username(username):
             messagebox.showerror("Error", "Username already taken!😱")
             return
 
@@ -58,20 +52,24 @@ def main():
             messagebox.showerror("Error", "Invalid Contact Number!😱")
             return
 
-        sql = "INSERT INTO counselors(counselor_id, name, username, contact, password, status) VALUES (%s,%s,%s,%s,%s,'Pending')"
-        cursor.execute(sql, (c_id, name, username, contact, password))
-        con.commit()
+        counselor_data = {
+            "counselor_id": c_id,
+            "name": name,
+            "username": username,
+            "contact": contact,
+            "password": password,
+            "college_name": college_name,
+            "status": "Pending"
+        }
+        db.add_counselor(c_id, counselor_data)
 
-        messagebox.showinfo("Success", "Registration submitted! Admin approval required to log in.🤗")
+        messagebox.showinfo("Success", "Registration submitted! College approval required to log in.🤗")
         login()
-
-    import random
 
     def generate_unique_id():
         while True:
             new_id_val = str(random.randint(100, 9999))
-            cursor.execute("SELECT * FROM counselors WHERE counselor_id = %s", (new_id_val,))
-            if not cursor.fetchone():
+            if not db.get_counselor(new_id_val):
                 return new_id_val
 
     def regenerate_id():
@@ -94,8 +92,6 @@ def main():
     txt_id = Entry(root, font=("Arial", 11), bd=1, highlightthickness=1, highlightbackground="#94a3b8")
     txt_id.place(x=720, y=125, width=170, height=30)
     
-
-    
     txt_id.insert(0, generate_unique_id())
     txt_id.config(state="readonly")
 
@@ -115,6 +111,15 @@ def main():
     Label(root, text="Password", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=1070, y=180)
     txt_password = Entry(root, show="*", font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
     txt_password.place(x=1070, y=205, height=30)
+
+    Label(root, text="Select College", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=1070, y=260)
+    
+    # Dynamic list of approved colleges
+    approved_cols = db.get_approved_colleges()
+    college_list = [col.get("college_name") for col in approved_cols]
+    
+    cb_college = ttk.Combobox(root, values=college_list, font=("Arial", 11), state="readonly", width=30)
+    cb_college.place(x=1070, y=285, height=30)
 
     def back():
         root.destroy()
@@ -138,3 +143,6 @@ def main():
     btn_login.bind("<Enter>", lambda e: btn_login.config(bg="#dc2626"))
     btn_login.bind("<Leave>", lambda e: btn_login.config(bg="#ef4444"))
     root.mainloop()
+
+if __name__ == "__main__":
+    main()

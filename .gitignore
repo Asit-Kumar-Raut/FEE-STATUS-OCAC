@@ -1,5 +1,10 @@
+firebase_credentials.json
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-.env
+dist/
+build/
+*.spec
+.agents/
+walkthrough.md
+implementation_plan.md
+task.md

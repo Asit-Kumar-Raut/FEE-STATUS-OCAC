@@ -1,6 +1,6 @@
 from tkinter import *
-import mysql.connector as _mysql_connector
 from tkinter import messagebox
+import db
 
 def main(counselor_name, counselor_id):
     root = Tk()
@@ -9,13 +9,8 @@ def main(counselor_name, counselor_id):
     root.resizable(False, False)
     root.config(bg="white")
 
-    con = _mysql_connector.connect(
-        host="localhost",
-        user="root",
-        password="asit@0987",
-        database="ocac"
-    )
-    cursor = con.cursor()
+    coun_info = db.get_counselor(counselor_id)
+    college_name = coun_info.get("college_name", "") if coun_info else ""
 
     def logout_action():
         root.destroy()
@@ -33,7 +28,7 @@ def main(counselor_name, counselor_id):
         counciler_student.main(counselor_name, counselor_id, sid)
 
     # Header
-    lbl_counselor = Label(root, text=f"🎓 COUNSELOR PROFILE: {counselor_name} (ID: {counselor_id})", fg="#8b5cf6", bg="white", font=("Segoe UI", 12, "bold"))
+    lbl_counselor = Label(root, text=f"🎓 COUNSELOR PROFILE: {counselor_name} (ID: {counselor_id}) | College: {college_name}", fg="#8b5cf6", bg="white", font=("Segoe UI", 12, "bold"))
     lbl_counselor.place(x=30, y=15)
 
     btn_logout = Button(root, text="LOG OUT", fg="white", bg="#ef4444", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=logout_action)
@@ -46,7 +41,7 @@ def main(counselor_name, counselor_id):
     lbl_title = Label(root, text="PENDING FEE STUDENT LIST", fg="#1e293b", bg="white", font=("Segoe UI", 20, "bold"))
     lbl_title.place(x=480, y=80)
 
-    # Search Bar (placed between title and table)
+    # Search Bar
     Label(root, text="Search Pending Student ID:", font=("Segoe UI", 11, "bold"), fg="#1e293b", bg="white").place(x=100, y=155)
     
     txt_search = Entry(root, font=("Segoe UI", 11), bd=1, highlightthickness=1, highlightbackground="#cbd5e1", bg="white", fg="#1e293b", insertbackground="black")
@@ -55,11 +50,14 @@ def main(counselor_name, counselor_id):
     def search_action():
         s_id = txt_search.get().strip()
         if s_id == "":
-            cursor.execute("SELECT student_id, name, course, total_fee, paid_amount, pending_amount FROM students WHERE pending_amount > 0 AND status = 'Accepted'")
+            student_list = db.get_students_by_college(college_name, status="Accepted", paid_status="Pending")
         else:
-            cursor.execute("SELECT student_id, name, course, total_fee, paid_amount, pending_amount FROM students WHERE pending_amount > 0 AND status = 'Accepted' AND student_id = %s", (s_id,))
-        
-        display_students(cursor.fetchall())
+            student = db.get_student(s_id)
+            if student and student.get("college_name") == college_name and student.get("status") == "Accepted" and int(student.get("pending_amount", 0)) > 0:
+                student_list = [student]
+            else:
+                student_list = []
+        display_students(student_list)
 
     btn_search = Button(root, text="🔍 Search", fg="white", bg="#3b82f6", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=search_action)
     btn_search.place(x=530, y=152, width=90, height=32)
@@ -80,7 +78,6 @@ def main(counselor_name, counselor_id):
     # Divider line under header
     Frame(table_frame, bg="#e2e8f0", height=2).place(x=20, y=55, width=1126)
 
-    # Keep track of active row labels to dynamically destroy/redraw them during searches
     row_widgets = []
 
     def display_students(student_list):
@@ -95,7 +92,12 @@ def main(counselor_name, counselor_id):
         else:
             y = 70
             for s in student_list:
-                s_id, name, course, t_fee, paid, pending = s
+                s_id = s.get("student_id")
+                name = s.get("name")
+                course = s.get("course")
+                t_fee = s.get("total_fee", 100000)
+                paid = s.get("paid_amount", 0)
+                pending = s.get("pending_amount", 100000)
 
                 l1 = Label(table_frame, text=s_id, font=("Segoe UI", 10), fg="#334155", bg="white")
                 l1.place(x=30, y=y)
@@ -111,9 +113,7 @@ def main(counselor_name, counselor_id):
                 l6.place(x=850, y=y)
 
                 def make_view_cmd(sid_val):
-                    def cmd():
-                        open_student_profile(sid_val)
-                    return cmd
+                    return lambda: open_student_profile(sid_val)
 
                 btn_view = Button(table_frame, text="View Profile", fg="white", bg="#3b82f6", font=("Segoe UI", 9, "bold"), bd=0, cursor="hand2", command=make_view_cmd(s_id))
                 btn_view.place(x=1020, y=y-3, width=100, height=26)
@@ -122,7 +122,7 @@ def main(counselor_name, counselor_id):
                 y += 40
 
     # Initial load of all pending students
-    cursor.execute("SELECT student_id, name, course, total_fee, paid_amount, pending_amount FROM students WHERE pending_amount > 0 AND status = 'Accepted'")
-    display_students(cursor.fetchall())
+    initial_list = db.get_students_by_college(college_name, status="Accepted", paid_status="Pending")
+    display_students(initial_list)
 
     root.mainloop()

@@ -1,7 +1,7 @@
 from tkinter import *
-import mysql.connector as _mysql_connector
 from tkinter import messagebox
 from tkinter import ttk
+import db
 
 def main(admin_name, admin_id):
     root = Tk()
@@ -11,34 +11,15 @@ def main(admin_name, admin_id):
     bg_color = "#eff6ff"
     root.config(bg=bg_color)
 
-    con = _mysql_connector.connect(
-        host="localhost",
-        user="root",
-        password="asit@0987",
-        database="ocac"
-    )
-    cursor = con.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS payments (
-            payment_id INT AUTO_INCREMENT PRIMARY KEY,
-            student_id VARCHAR(50),
-            amount INT,
-            mode VARCHAR(20),
-            utr_number VARCHAR(100),
-            payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-    con.commit()
-
     def logout_action():
         root.destroy()
-        from admin import admin_login
-        admin_login.main()
+        from college import college_login
+        college_login.main()
 
     def back_action():
         root.destroy()
-        from admin import admin_dashboard
-        admin_dashboard.main(admin_name, admin_id)
+        from college import college_dashboard
+        college_dashboard.main(admin_name, admin_id)
 
     def open_pending():
         root.destroy()
@@ -57,27 +38,24 @@ def main(admin_name, admin_id):
             messagebox.showerror("Error", "Please select all options!😟")
             return
         
+        date_range = None
         if option == "1day collection":
-            date_cond = "payment_date >= NOW() - INTERVAL 1 DAY"
+            date_range = "1day"
         elif option == "last 7 days collection":
-            date_cond = "payment_date >= NOW() - INTERVAL 7 DAY"
+            date_range = "7days"
         elif option == "last 30 days":
-            date_cond = "payment_date >= NOW() - INTERVAL 30 DAY"
+            date_range = "30days"
         elif option == "full year":
-            date_cond = "payment_date >= NOW() - INTERVAL 1 YEAR"
-        else:
-            return
+            date_range = "1year"
 
+        mode = None
         if mode_filter == "Online":
-            query = f"SELECT SUM(amount) FROM payments WHERE {date_cond} AND mode = 'Online'"
+            mode = "Online"
         elif mode_filter == "Offline":
-            query = f"SELECT SUM(amount) FROM payments WHERE {date_cond} AND mode = 'Offline'"
-        else: # Total
-            query = f"SELECT SUM(amount) FROM payments WHERE {date_cond}"
-        
-        cursor.execute(query)
-        res = cursor.fetchone()[0]
-        total = res if res is not None else 0
+            mode = "Offline"
+
+        payments = db.get_payments_by_college(admin_name, date_range=date_range, mode=mode)
+        total = sum(p.get("amount", 0) for p in payments)
         messagebox.showinfo("Total Income", f"Collection for '{option}' ({mode_filter}):\n₹ {total:,} 🤗")
 
     def search_student():
@@ -86,14 +64,17 @@ def main(admin_name, admin_id):
             messagebox.showerror("Error", "Please enter a Student ID to search!😟")
             return
 
-        cursor.execute("SELECT student_id, name, course, semester FROM students WHERE student_id = %s AND status = 'Accepted'", (s_id,))
-        student = cursor.fetchone()
+        student = db.get_student(s_id)
 
         for widget in result_frame.winfo_children():
             widget.destroy()
 
-        if student:
-            sid, name, course, sem = student
+        if student and student.get("college_name") == admin_name and student.get("status") == "Accepted":
+            sid = student.get("student_id")
+            name = student.get("name")
+            course = student.get("course")
+            sem = student.get("semester")
+            
             btn_result = Button(result_frame, text=f"👤 Student ID: {sid}\nName: {name}\nCourse: {course} ({sem})\n→ Click to Adjust Profile", 
                                 fg="white", bg="#3b82f6", activebackground="#2563eb", activeforeground="white", 
                                 font=("Segoe UI", 11, "bold"), bd=0, cursor="hand2", justify=LEFT, padx=15, pady=15,
@@ -108,10 +89,10 @@ def main(admin_name, admin_id):
         admin_student_fee.main(admin_name, admin_id, sid)
 
     # Header bar
-    header_frame = Frame(root, bg="#1e293b")
+    header_frame = Frame(root, bg="#78350f") # Deep amber header for College dashboard consistency
     header_frame.place(x=0, y=0, width=1366, height=60)
 
-    lbl_admin = Label(header_frame, text=f"🔑 ADMIN PROFILE: {admin_name} (ID: {admin_id})", fg="#f8fafc", bg="#1e293b", font=("Segoe UI", 12, "bold"))
+    lbl_admin = Label(header_frame, text=f"🏛️ COLLEGE PROFILE: {admin_name} (ID: {admin_id})", fg="#fef3c7", bg="#78350f", font=("Segoe UI", 12, "bold"))
     lbl_admin.place(x=30, y=15)
 
     btn_logout = Button(header_frame, text="LOG OUT", fg="white", bg="#ef4444", activebackground="#dc2626", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=logout_action)
@@ -127,13 +108,10 @@ def main(admin_name, admin_id):
     title_label = Label(root, text="ACADEMIC FEE STATUS CONTROL", fg="#1e293b", bg=bg_color, font=("Segoe UI", 24, "bold"))
     title_label.place(x=480, y=80)
 
-    # Student Counts statistics
-    cursor.execute("SELECT COUNT(*) FROM students WHERE status = 'Accepted'")
-    total_stud = cursor.fetchone()[0]
-    cursor.execute("SELECT COUNT(*) FROM students WHERE pending_amount <= 0 AND status = 'Accepted'")
-    full_stud = cursor.fetchone()[0]
-    cursor.execute("SELECT COUNT(*) FROM students WHERE pending_amount > 0 AND status = 'Accepted'")
-    pending_stud = cursor.fetchone()[0]
+    # Get student statistics filtered by college name (admin_name)
+    total_stud = len(db.get_students_by_college(admin_name, status="Accepted"))
+    full_stud = len(db.get_students_by_college(admin_name, status="Accepted", paid_status="Fully Paid"))
+    pending_stud = len(db.get_students_by_college(admin_name, status="Accepted", paid_status="Pending"))
 
     lbl_tot = Label(root, text=f"Total Student: {total_stud}", font=("Segoe UI", 11, "bold"), fg="#1e293b", bg=bg_color)
     lbl_tot.place(x=100, y=145)

@@ -1,6 +1,5 @@
 from tkinter import *
 from PIL import Image, ImageTk
-import mysql.connector as _mysql_connector
 from tkinter import messagebox
 
 def main():
@@ -9,38 +8,22 @@ def main():
     root.geometry("1366x768+0+0")
     root.resizable(False, False)
 
-    con = _mysql_connector.connect(
-        host="localhost",
-        user="root",
-        password="asit@0987",
-        database="ocac"
-    )
-    cursor = con.cursor()
-
-    def register():
-        root.destroy()
-        from admin import admin_register
-        admin_register.main()
-
     def back():
         root.destroy()
-        from admin import admin_register
-        admin_register.main()
+        import home
+        home.main()
 
     def login_action():
-        username = txt_username.get()
+        username = txt_username.get().strip()
         password = txt_password.get()
 
         if username == "" or password == "":
             messagebox.showerror("Error", "All fields are required!😟")
             return
 
-        cursor.execute("SELECT name, admin_id FROM admins WHERE username = %s AND password = %s", (username, password))
-        result = cursor.fetchone()
-
-        if result:
-            admin_name = result[0]
-            admin_id = result[1]
+        if (username == "9861216929" or username == "asitraut2006@gmail.com") and password == "gec@2026":
+            admin_name = "Super Admin"
+            admin_id = "ADMIN01"
             messagebox.showinfo("Success", f"Welcome back, {admin_name}!🤗")
             root.destroy()
             from admin import admin_dashboard
@@ -65,7 +48,7 @@ def main():
     title_label = Label(root, text="ADMIN PORTAL LOGIN", fg=text_dark, bg=bg_transparent, font=("Segoe UI", 24, "bold"))
     title_label.place(x=515, y=80)
 
-    Label(root, text="Username", fg=text_dark, bg=bg_transparent, font=("Arial", 12, "bold")).place(x=200, y=200)
+    Label(root, text="Username / Email / Number", fg=text_dark, bg=bg_transparent, font=("Arial", 12, "bold")).place(x=200, y=200)
     txt_username = Entry(root, font=("Arial", 12), width=30, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
     txt_username.place(x=200, y=230, height=30)
 
@@ -82,12 +65,5 @@ def main():
     btn_login.place(x=200, y=410, width=300, height=40)
     btn_login.bind("<Enter>", lambda e: btn_login.config(bg="#1d4ed8"))
     btn_login.bind("<Leave>", lambda e: btn_login.config(bg=accent_blue))
-
-    Label(root, text="No account?", fg=text_dark, bg=bg_transparent, font=("Helvetica", 11, "bold")).place(x=150, y=520, width=180)
-    
-    btn_register = Button(root, text="REGISTER HERE", fg="white", bg="#ef4444", activebackground="#dc2626", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=register)
-    btn_register.place(x=300, y=520, width=140, height=30)
-    btn_register.bind("<Enter>", lambda e: btn_register.config(bg="#dc2626"))
-    btn_register.bind("<Leave>", lambda e: btn_register.config(bg="#ef4444"))
 
     root.mainloop()

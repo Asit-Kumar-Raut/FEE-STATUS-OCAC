@@ -1,53 +1,42 @@
 from tkinter import *
-import mysql.connector as _mysql_connector
 from tkinter import messagebox
 from tkinter import ttk
+import db
 
 def main(admin_name, admin_id, student_id):
     root = Tk()
-    root.title("Admin - Student Fee Profile Control")
+    root.title("College - Student Fee Profile Control")
     root.geometry("1366x768+0+0")
     root.resizable(False, False)
     root.config(bg="white")
 
-    con = _mysql_connector.connect(
-        host="localhost",
-        user="root",
-        password="asit@0987",
-        database="ocac"
-    )
-    cursor = con.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS payments (
-            payment_id INT AUTO_INCREMENT PRIMARY KEY,
-            student_id VARCHAR(50),
-            amount INT,
-            mode VARCHAR(20),
-            utr_number VARCHAR(100),
-            payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-    con.commit()
+    student_details = db.get_student(student_id)
+    if not student_details:
+        messagebox.showerror("Error", "Student details not found!")
+        root.destroy()
+        return
 
-    def get_student_data():
-        cursor.execute("SELECT student_id, name, username, phonenumber, emailid, course, academic_year, semester, total_fee, paid_amount, pending_amount FROM students WHERE student_id = %s", (student_id,))
-        return cursor.fetchone()
+    s_id = student_details.get("student_id", "")
+    s_name = student_details.get("name", "")
+    username = student_details.get("username", "")
+    phone = student_details.get("phonenumber", "")
+    email = student_details.get("emailid", "")
+    course = student_details.get("course", "")
+    year = student_details.get("academic_year", "")
+    sem = student_details.get("semester", "")
+    total_fee = student_details.get("total_fee", 100000)
+    paid_amount = student_details.get("paid_amount", 0)
+    pending_amount = student_details.get("pending_amount", 100000)
 
-    student_details = get_student_data()
-    s_id, s_name, username, phone, email, course, year, sem, total_fee, paid_amount, pending_amount = student_details
-
-    cursor.execute("SELECT SUM(amount) FROM payments WHERE student_id = %s AND mode = 'Online'", (student_id,))
-    res_online = cursor.fetchone()[0]
-    online_paid = res_online if res_online is not None else 0
-
-    cursor.execute("SELECT SUM(amount) FROM payments WHERE student_id = %s AND mode = 'Offline'", (student_id,))
-    res_offline = cursor.fetchone()[0]
-    offline_paid = res_offline if res_offline is not None else 0
+    # Online/offline sum
+    payments = db.get_payments(student_id)
+    online_paid = sum(p.get("amount", 0) for p in payments if p.get("mode") == "Online")
+    offline_paid = sum(p.get("amount", 0) for p in payments if p.get("mode") == "Offline")
 
     def logout_action():
         root.destroy()
-        from admin import admin_login
-        admin_login.main()
+        from college import college_login
+        college_login.main()
 
     def back_action():
         root.destroy()
@@ -74,8 +63,12 @@ def main(admin_name, admin_id, student_id):
                 messagebox.showerror("Error", "Please enter the UTR number for Online payment!😟")
                 return
         
-        cursor.execute("SELECT total_fee, paid_amount FROM students WHERE student_id = %s", (student_id,))
-        t_fee, p_amt = cursor.fetchone()
+        current_student = db.get_student(student_id)
+        if not current_student:
+            return
+
+        t_fee = int(current_student.get("total_fee", 100000))
+        p_amt = int(current_student.get("paid_amount", 0))
 
         new_paid = p_amt + added_amount
         new_pending = t_fee - new_paid
@@ -84,9 +77,13 @@ def main(admin_name, admin_id, student_id):
             messagebox.showerror("Error", f"Added amount ₹ {added_amount:,} exceeds the pending balance of ₹ {t_fee - p_amt:,}!😟")
             return
 
-        cursor.execute("UPDATE students SET paid_amount = %s, pending_amount = %s WHERE student_id = %s", (new_paid, new_pending, student_id))
-        cursor.execute("INSERT INTO payments (student_id, amount, mode, utr_number) VALUES (%s, %s, %s, %s)", (student_id, added_amount, mode, utr))
-        con.commit()
+        payment_data = {
+            "student_id": student_id,
+            "amount": added_amount,
+            "mode": mode,
+            "utr_number": utr
+        }
+        db.add_payment(payment_data)
 
         messagebox.showinfo("Success", f"Payment of ₹ {added_amount:,} registered successfully!🤗")
         root.destroy()
@@ -104,8 +101,12 @@ def main(admin_name, admin_id, student_id):
 
         deducted_amount = int(amt_str)
         
-        cursor.execute("SELECT total_fee, paid_amount FROM students WHERE student_id = %s", (student_id,))
-        t_fee, p_amt = cursor.fetchone()
+        current_student = db.get_student(student_id)
+        if not current_student:
+            return
+
+        t_fee = int(current_student.get("total_fee", 100000))
+        p_amt = int(current_student.get("paid_amount", 0))
 
         new_paid = p_amt - deducted_amount
         new_pending = t_fee - new_paid
@@ -114,8 +115,10 @@ def main(admin_name, admin_id, student_id):
             messagebox.showerror("Error", f"Deduction amount ₹ {deducted_amount:,} exceeds current paid balance of ₹ {p_amt:,}!😟")
             return
 
-        cursor.execute("UPDATE students SET paid_amount = %s, pending_amount = %s WHERE student_id = %s", (new_paid, new_pending, student_id))
-        con.commit()
+        db.update_student(student_id, {
+            "paid_amount": new_paid,
+            "pending_amount": new_pending
+        })
 
         messagebox.showinfo("Success", f"Fee payment reduced by ₹ {deducted_amount:,} successfully!👍")
         root.destroy()
@@ -126,10 +129,10 @@ def main(admin_name, admin_id, student_id):
     root.config(bg=bg_color)
 
     # Header bar
-    header_frame = Frame(root, bg="#1e293b")
+    header_frame = Frame(root, bg="#78350f") # Deep amber header for College dashboard consistency
     header_frame.place(x=0, y=0, width=1366, height=60)
 
-    lbl_admin = Label(header_frame, text=f"🔑 ADMIN PROFILE: {admin_name} (ID: {admin_id})", fg="#f8fafc", bg="#1e293b", font=("Segoe UI", 12, "bold"))
+    lbl_admin = Label(header_frame, text=f"🏛️ COLLEGE PROFILE: {admin_name} (ID: {admin_id})", fg="#fef3c7", bg="#78350f", font=("Segoe UI", 12, "bold"))
     lbl_admin.place(x=30, y=15)
 
     btn_logout = Button(header_frame, text="LOG OUT", fg="white", bg="#ef4444", activebackground="#dc2626", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=logout_action)
@@ -142,7 +145,7 @@ def main(admin_name, admin_id, student_id):
     btn_back.bind("<Enter>", lambda e: btn_back.config(bg="#334155"))
     btn_back.bind("<Leave>", lambda e: btn_back.config(bg="#475569"))
 
-    title_label = Label(root, text="ADMIN STUDENT FEE PROFILE CONTROL", fg="#1e293b", bg=bg_color, font=("Segoe UI", 20, "bold"))
+    title_label = Label(root, text="COLLEGE STUDENT FEE PROFILE CONTROL", fg="#1e293b", bg=bg_color, font=("Segoe UI", 20, "bold"))
     title_label.place(x=430, y=80)
 
     # LEFT DIVISION: Student Profile Details
@@ -169,6 +172,7 @@ def main(admin_name, admin_id, student_id):
     def view_receipts():
         root.destroy()
         from student import receipt
+        # Pass admin/college context to the receipts viewer
         receipt.main(student_id, role="admin", caller_name=admin_name, caller_id=admin_id)
 
     btn_receipts = Button(root, text="🧾 VIEW HISTORICAL RECEIPTS", fg="white", bg="#3b82f6", activebackground="#2563eb", activeforeground="white", font=("Segoe UI", 11, "bold"), bd=0, cursor="hand2", command=view_receipts)

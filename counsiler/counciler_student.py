@@ -1,48 +1,38 @@
 from tkinter import *
-import mysql.connector as _mysql_connector
 from tkinter import messagebox
 from tkinter import ttk
+import db
 
 def main(counselor_name, counselor_id, student_id):
     root = Tk()
     root.title("Counselor - Student Fee Profile")
     root.geometry("1366x768+0+0")
     root.resizable(False, False)
-    root.config(bg="white")
+    bg_color = "#eff6ff"
+    root.config(bg=bg_color)
 
-    con = _mysql_connector.connect(
-        host="localhost",
-        user="root",
-        password="asit@0987",
-        database="ocac"
-    )
-    cursor = con.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS payments (
-            payment_id INT AUTO_INCREMENT PRIMARY KEY,
-            student_id VARCHAR(50),
-            amount INT,
-            mode VARCHAR(20),
-            utr_number VARCHAR(100),
-            payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-    con.commit()
+    student_details = db.get_student(student_id)
+    if not student_details:
+        messagebox.showerror("Error", "Student details not found!")
+        root.destroy()
+        return
 
-    def get_student_data():
-        cursor.execute("SELECT student_id, name, username, phonenumber, emailid, course, academic_year, semester, total_fee, paid_amount, pending_amount FROM students WHERE student_id = %s", (student_id,))
-        return cursor.fetchone()
+    s_id = student_details.get("student_id", "")
+    s_name = student_details.get("name", "")
+    username = student_details.get("username", "")
+    phone = student_details.get("phonenumber", "")
+    email = student_details.get("emailid", "")
+    course = student_details.get("course", "")
+    year = student_details.get("academic_year", "")
+    sem = student_details.get("semester", "")
+    total_fee = student_details.get("total_fee", 100000)
+    paid_amount = student_details.get("paid_amount", 0)
+    pending_amount = student_details.get("pending_amount", 100000)
 
-    student_details = get_student_data()
-    s_id, s_name, username, phone, email, course, year, sem, total_fee, paid_amount, pending_amount = student_details
-
-    cursor.execute("SELECT SUM(amount) FROM payments WHERE student_id = %s AND mode = 'Online'", (student_id,))
-    res_online = cursor.fetchone()[0]
-    online_paid = res_online if res_online is not None else 0
-
-    cursor.execute("SELECT SUM(amount) FROM payments WHERE student_id = %s AND mode = 'Offline'", (student_id,))
-    res_offline = cursor.fetchone()[0]
-    offline_paid = res_offline if res_offline is not None else 0
+    # Online/offline sum
+    payments = db.get_payments(student_id)
+    online_paid = sum(p.get("amount", 0) for p in payments if p.get("mode") == "Online")
+    offline_paid = sum(p.get("amount", 0) for p in payments if p.get("mode") == "Offline")
 
     def logout_action():
         root.destroy()
@@ -74,31 +64,32 @@ def main(counselor_name, counselor_id, student_id):
                 messagebox.showerror("Error", "Please enter the UTR number for Online payment!😟")
                 return
         
-        cursor.execute("SELECT total_fee, paid_amount FROM students WHERE student_id = %s", (student_id,))
-        t_fee, p_amt = cursor.fetchone()
+        current_student = db.get_student(student_id)
+        if not current_student:
+            return
+
+        t_fee = int(current_student.get("total_fee", 100000))
+        p_amt = int(current_student.get("paid_amount", 0))
 
         new_paid = p_amt + added_amount
         
-        # Validation check: total paid cannot exceed total fee (1,00,000)
         if new_paid > t_fee:
             messagebox.showerror("Error", f"Added amount ₹ {added_amount:,} exceeds the pending balance of ₹ {t_fee - p_amt:,}!😟")
             return
 
-        new_pending = t_fee - new_paid
-
-        # Update database
-        cursor.execute("UPDATE students SET paid_amount = %s, pending_amount = %s WHERE student_id = %s", (new_paid, new_pending, student_id))
-        cursor.execute("INSERT INTO payments (student_id, amount, mode, utr_number) VALUES (%s, %s, %s, %s)", (student_id, added_amount, mode, utr))
-        con.commit()
+        # Add payment to Firestore (automatically updates student's paid/pending amounts)
+        payment_data = {
+            "student_id": student_id,
+            "amount": added_amount,
+            "mode": mode,
+            "utr_number": utr
+        }
+        db.add_payment(payment_data)
 
         messagebox.showinfo("Success", f"Payment of ₹ {added_amount:,} registered successfully!🤗")
         
         root.destroy()
         main(counselor_name, counselor_id, student_id)
-
-    # Set background color
-    bg_color = "#eff6ff"
-    root.config(bg=bg_color)
 
     # Header bar
     header_frame = Frame(root, bg="#1e293b")
@@ -108,7 +99,7 @@ def main(counselor_name, counselor_id, student_id):
     lbl_counselor.place(x=30, y=15)
 
     btn_logout = Button(header_frame, text="LOG OUT", fg="white", bg="#ef4444", activebackground="#dc2626", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=logout_action)
-    btn_logout.place(x=1230, y=12, width=100, height=35)
+    btn_logout.place(x=1200, y=12, width=100, height=35)
     btn_logout.bind("<Enter>", lambda e: btn_logout.config(bg="#dc2626"))
     btn_logout.bind("<Leave>", lambda e: btn_logout.config(bg="#ef4444"))
 
@@ -124,7 +115,16 @@ def main(counselor_name, counselor_id, student_id):
     lbl_title = Label(root, text="REGISTRATION DETAILS", font=("Segoe UI", 16, "bold"), fg="#3b82f6", bg=bg_color)
     lbl_title.place(x=150, y=180)
 
-    details = [ ("Student ID:", s_id), ("Full Name:", s_name), ("Username:", username), ("Phone Number:", phone), ("Email ID:", email), ("Course:", course),("Academic Year:", year),("Semester:", sem),]
+    details = [ 
+        ("Student ID:", s_id), 
+        ("Full Name:", s_name), 
+        ("Username:", username), 
+        ("Phone Number:", phone), 
+        ("Email ID:", email), 
+        ("Course:", course),
+        ("Academic Year:", year),
+        ("Semester:", sem),
+    ]
 
     y_pos = 230
     for label, val in details:

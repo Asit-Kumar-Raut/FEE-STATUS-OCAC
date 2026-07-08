@@ -1,22 +1,15 @@
 from tkinter import *
 from PIL import Image, ImageTk
-import mysql.connector as _mysql_connector
 from tkinter import messagebox
 from tkinter import ttk
 import datetime
+import db
+
 def main():
     root = Tk()
     root.title("Student Registration")
     root.geometry("1366x768+0+0")
     root.resizable(False, False)
-
-    con = _mysql_connector.connect(
-        host="localhost",
-        user="root",
-        password="asit@0987",
-        database="ocac"
-    )
-    cursor = con.cursor()
 
     def login():
         root.destroy()
@@ -32,17 +25,18 @@ def main():
     background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
     def registration():
-        s_id = txt_id.get()
-        name = txt_name.get()
-        username = txt_username.get()
-        phone = txt_phone.get()
-        email = txt_email.get()
+        s_id = txt_id.get().strip()
+        name = txt_name.get().strip()
+        username = txt_username.get().strip()
+        phone = txt_phone.get().strip()
+        email = txt_email.get().strip()
         course = cb_course.get()
         year = cb_year.get()
-        sem = txt_sem.get()
+        sem = txt_sem.get().strip()
         password = txt_password.get()
+        college_name = cb_college.get()
 
-        if s_id == "" or name == "" or username == "" or phone == "" or email == "" or course == "" or year == "" or sem == "" or password == "":
+        if s_id == "" or name == "" or username == "" or phone == "" or email == "" or course == "" or year == "" or sem == "" or password == "" or college_name == "":
             messagebox.showerror("Error", "All fields are required!😟")
             return
 
@@ -56,13 +50,11 @@ def main():
             messagebox.showerror("Error", "Invalid Student ID!😱")
             return
 
-        cursor.execute("SELECT * FROM students WHERE student_id = %s", (s_id,))
-        if cursor.fetchone():
+        if db.get_student(s_id):
             messagebox.showerror("Error", "Student ID already registered!😱")
             return
 
-        cursor.execute("SELECT * FROM students WHERE username = %s", (username,))
-        if cursor.fetchone():
+        if db.get_student_by_username(username):
             messagebox.showerror("Error", "Username already taken!😱")
             return
 
@@ -70,11 +62,25 @@ def main():
             messagebox.showerror("Error", "Invalid Phone Number!😱")
             return
 
-        sql = "INSERT INTO students(student_id, name, username, phonenumber, emailid, course, academic_year, semester, password, status) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,'Pending')"
-        cursor.execute(sql, (s_id, name, username, phone, email, course, year, sem, password))
-        con.commit()
+        student_data = {
+            "student_id": s_id,
+            "name": name,
+            "username": username,
+            "phonenumber": phone,
+            "emailid": email,
+            "course": course,
+            "academic_year": year,
+            "semester": sem,
+            "password": password,
+            "college_name": college_name,
+            "status": "Pending",
+            "total_fee": 100000,
+            "paid_amount": 0,
+            "pending_amount": 100000
+        }
+        db.add_student(s_id, student_data)
 
-        messagebox.showinfo("Success", "Registration submitted! Admin approval required to log in.🤗")
+        messagebox.showinfo("Success", "Registration submitted! College approval required to log in.🤗")
         login()
 
     # Stylistic transparent layout variables
@@ -125,6 +131,12 @@ def main():
     txt_password = Entry(root, show="*", font=("Arial", 11), width=32, bd=1, highlightthickness=1, highlightbackground="#94a3b8")
     txt_password.place(x=420, y=365, height=30)
 
+    Label(root, text="Select College", fg=text_dark, bg=bg_transparent, font=("Arial", 11, "bold")).place(x=420, y=420)
+    approved_cols = db.get_approved_colleges()
+    college_list = [col.get("college_name") for col in approved_cols]
+    cb_college = ttk.Combobox(root, values=college_list, font=("Arial", 11), state="readonly", width=30)
+    cb_college.place(x=420, y=445, height=30)
+
     def back():
         root.destroy()
         import home
@@ -148,3 +160,6 @@ def main():
     btn_login.bind("<Leave>", lambda e: btn_login.config(bg="#ef4444"))
 
     root.mainloop()
+
+if __name__ == "__main__":
+    main()

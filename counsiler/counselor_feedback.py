@@ -1,22 +1,14 @@
 from tkinter import *
-import mysql.connector as _mysql_connector
 from tkinter import messagebox
+import db
 
 def main(counselor_name, counselor_id, student_id):
     root = Tk()
-    root.title("Counselor Feedback to Admin")
+    root.title("Counselor Feedback to College")
     root.geometry("1366x768+0+0")
     root.resizable(False, False)
     bg_color = "#eff6ff"
     root.config(bg=bg_color)
-
-    con = _mysql_connector.connect(
-        host="localhost",
-        user="root",
-        password="asit@0987",
-        database="ocac"
-    )
-    cursor = con.cursor()
 
     def logout_action():
         root.destroy()
@@ -44,11 +36,15 @@ def main(counselor_name, counselor_id, student_id):
             messagebox.showerror("Error", "Notice content cannot be empty!😟")
             return
 
-        sql = "INSERT INTO counselor_feedback (counselor_id, counselor_name, student_id, message) VALUES (%s, %s, %s, %s)"
-        cursor.execute(sql, (counselor_id, counselor_name, s_id, message_text))
-        con.commit()
+        feedback_data = {
+            "counselor_id": counselor_id,
+            "counselor_name": counselor_name,
+            "student_id": s_id,
+            "message": message_text
+        }
+        db.add_counselor_feedback(feedback_data)
 
-        messagebox.showinfo("Success", "Notice sent to Admin successfully!🤗")
+        messagebox.showinfo("Success", "Notice sent to College successfully!🤗")
         back_action()
 
     # Header bar
@@ -64,11 +60,11 @@ def main(counselor_name, counselor_id, student_id):
     btn_back = Button(root, text="← BACK", fg="white", bg="#475569", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=back_action)
     btn_back.place(x=30, y=80, width=100, height=35)
 
-    title_label = Label(root, text="SEND MISTAKE / ADJUSTMENT NOTICE TO ADMIN", fg="#1e293b", bg=bg_color, font=("Segoe UI", 22, "bold"))
+    title_label = Label(root, text="SEND MISTAKE / ADJUSTMENT NOTICE TO COLLEGE", fg="#1e293b", bg=bg_color, font=("Segoe UI", 22, "bold"))
     title_label.place(x=350, y=80)
 
     # Form components
-    Label(root, text="Report incorrect payment logs or student adjustments directly to the Admin below.", font=("Segoe UI", 12), fg="#475569", bg=bg_color).place(x=333, y=180)
+    Label(root, text="Report incorrect payment logs or student adjustments directly to the College below.", font=("Segoe UI", 12), fg="#475569", bg=bg_color).place(x=333, y=180)
     
     Label(root, text=f"Counselor ID: {counselor_id}", font=("Segoe UI", 11, "bold"), fg="#1e293b", bg=bg_color).place(x=333, y=220)
     
@@ -84,7 +80,7 @@ def main(counselor_name, counselor_id, student_id):
     txt_message = Text(root, font=("Segoe UI", 11), bd=1, highlightthickness=1, highlightbackground="#cbd5e1", bg="white", fg="#1e293b", insertbackground="black")
     txt_message.place(x=333, y=290, width=700, height=250)
 
-    btn_submit = Button(root, text="SEND NOTICE TO ADMIN", fg="white", bg="#0d9488", activebackground="#0f766e", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=submit_feedback)
+    btn_submit = Button(root, text="SEND NOTICE TO COLLEGE", fg="white", bg="#0d9488", activebackground="#0f766e", activeforeground="white", font=("Segoe UI", 12, "bold"), bd=0, cursor="hand2", command=submit_feedback)
     btn_submit.place(x=333, y=560, width=700, height=45)
 
     root.mainloop()

@@ -1,6 +1,6 @@
 from tkinter import *
-import mysql.connector as _mysql_connector
 from tkinter import messagebox
+import db
 
 def main(admin_name, admin_id):
     root = Tk()
@@ -10,18 +10,10 @@ def main(admin_name, admin_id):
     bg_color = "#eff6ff"
     root.config(bg=bg_color)
 
-    con = _mysql_connector.connect(
-        host="localhost",
-        user="root",
-        password="asit@0987",
-        database="ocac"
-    )
-    cursor = con.cursor()
-
     def logout_action():
         root.destroy()
-        from admin import admin_login
-        admin_login.main()
+        from college import college_login
+        college_login.main()
 
     def back_action():
         root.destroy()
@@ -34,10 +26,10 @@ def main(admin_name, admin_id):
         admin_student_fee.main(admin_name, admin_id, sid)
 
     # Header bar
-    header_frame = Frame(root, bg="#1e293b")
+    header_frame = Frame(root, bg="#78350f") # Deep amber header for College dashboard consistency
     header_frame.place(x=0, y=0, width=1366, height=60)
 
-    lbl_admin = Label(header_frame, text=f"🔑 ADMIN PROFILE: {admin_name} (ID: {admin_id})", fg="#f8fafc", bg="#1e293b", font=("Segoe UI", 12, "bold"))
+    lbl_admin = Label(header_frame, text=f"🏛️ COLLEGE PROFILE: {admin_name} (ID: {admin_id})", fg="#fef3c7", bg="#78350f", font=("Segoe UI", 12, "bold"))
     lbl_admin.place(x=30, y=15)
 
     btn_logout = Button(header_frame, text="LOG OUT", fg="white", bg="#ef4444", activebackground="#dc2626", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=logout_action)
@@ -63,11 +55,14 @@ def main(admin_name, admin_id):
     def search_action():
         s_id = txt_search.get().strip()
         if s_id == "":
-            cursor.execute("SELECT student_id, name, course, total_fee, paid_amount, pending_amount FROM students WHERE pending_amount > 0 AND status = 'Accepted'")
+            student_list = db.get_students_by_college(admin_name, status="Accepted", paid_status="Pending")
         else:
-            cursor.execute("SELECT student_id, name, course, total_fee, paid_amount, pending_amount FROM students WHERE pending_amount > 0 AND status = 'Accepted' AND student_id = %s", (s_id,))
-        
-        display_students(cursor.fetchall())
+            student = db.get_student(s_id)
+            if student and student.get("college_name") == admin_name and student.get("status") == "Accepted" and int(student.get("pending_amount", 0)) > 0:
+                student_list = [student]
+            else:
+                student_list = []
+        display_students(student_list)
 
     btn_search = Button(root, text="🔍 Search", fg="white", bg="#3b82f6", activebackground="#2563eb", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=search_action)
     btn_search.place(x=530, y=152, width=90, height=32)
@@ -105,7 +100,12 @@ def main(admin_name, admin_id):
         else:
             y = 70
             for s in student_list:
-                s_id, name, course, t_fee, paid, pending = s
+                s_id = s.get("student_id")
+                name = s.get("name")
+                course = s.get("course")
+                t_fee = s.get("total_fee", 100000)
+                paid = s.get("paid_amount", 0)
+                pending = s.get("pending_amount", 100000)
 
                 l1 = Label(table_frame, text=s_id, font=("Segoe UI", 10), fg="#334155", bg=bg_color)
                 l1.place(x=30, y=y)
@@ -121,9 +121,7 @@ def main(admin_name, admin_id):
                 l6.place(x=850, y=y)
 
                 def make_view_cmd(sid_val):
-                    def cmd():
-                        open_student_profile(sid_val)
-                    return cmd
+                    return lambda: open_student_profile(sid_val)
 
                 btn_view = Button(table_frame, text="Adjust Fee", fg="white", bg="#3b82f6", activebackground="#2563eb", activeforeground="white", font=("Segoe UI", 9, "bold"), bd=0, cursor="hand2", command=make_view_cmd(s_id))
                 btn_view.place(x=1020, y=y-3, width=100, height=26)
@@ -134,7 +132,7 @@ def main(admin_name, admin_id):
                 y += 40
 
     # Initial load
-    cursor.execute("SELECT student_id, name, course, total_fee, paid_amount, pending_amount FROM students WHERE pending_amount > 0 AND status = 'Accepted'")
-    display_students(cursor.fetchall())
+    initial_list = db.get_students_by_college(admin_name, status="Accepted", paid_status="Pending")
+    display_students(initial_list)
 
     root.mainloop()

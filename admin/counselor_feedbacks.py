@@ -1,6 +1,6 @@
 from tkinter import *
-import mysql.connector as _mysql_connector
 from tkinter import messagebox
+import db
 
 def main(admin_name, admin_id):
     root = Tk()
@@ -10,29 +10,20 @@ def main(admin_name, admin_id):
     bg_color = "#eff6ff"
     root.config(bg=bg_color)
 
-    con = _mysql_connector.connect(
-        host="localhost",
-        user="root",
-        password="asit@0987",
-        database="ocac"
-    )
-    cursor = con.cursor()
-
     def logout_action():
         root.destroy()
-        from admin import admin_login
-        admin_login.main()
+        from college import college_login
+        college_login.main()
 
     def back_action():
         root.destroy()
-        from admin import admin_dashboard
-        admin_dashboard.main(admin_name, admin_id)
+        from college import college_dashboard
+        college_dashboard.main(admin_name, admin_id)
 
     def delete_feedback(fb_id):
         ans = messagebox.askyesno("Confirm Delete", "Are you sure you want to delete this counselor notice?")
         if ans:
-            cursor.execute("DELETE FROM counselor_feedback WHERE id = %s", (fb_id,))
-            con.commit()
+            db.delete_counselor_feedback(fb_id)
             messagebox.showinfo("Success", "Notice deleted successfully!🤗")
             root.destroy()
             main(admin_name, admin_id)
@@ -43,10 +34,10 @@ def main(admin_name, admin_id):
         admin_student_fee.main(admin_name, admin_id, sid)
 
     # Header bar
-    header_frame = Frame(root, bg="#1e293b")
+    header_frame = Frame(root, bg="#78350f") # Deep amber header for College dashboard consistency
     header_frame.place(x=0, y=0, width=1366, height=60)
 
-    lbl_admin = Label(header_frame, text=f"🔑 ADMIN PROFILE: {admin_name} (ID: {admin_id})", fg="#f8fafc", bg="#1e293b", font=("Segoe UI", 12, "bold"))
+    lbl_admin = Label(header_frame, text=f"🏛️ COLLEGE PROFILE: {admin_name} (ID: {admin_id})", fg="#fef3c7", bg="#78350f", font=("Segoe UI", 12, "bold"))
     lbl_admin.place(x=30, y=15)
 
     btn_logout = Button(header_frame, text="LOG OUT", fg="white", bg="#ef4444", activebackground="#dc2626", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=logout_action)
@@ -70,15 +61,24 @@ def main(admin_name, admin_id):
     # Divider line
     Frame(root, bg="#cbd5e1", height=2).place(x=20, y=170, width=1326)
 
-    cursor.execute("SELECT id, counselor_id, counselor_name, student_id, message, created_at FROM counselor_feedback ORDER BY created_at DESC")
-    feedbacks = cursor.fetchall()
+    # Retrieve counselor feedbacks for this college
+    feedbacks = db.get_counselor_feedbacks(admin_name)
 
     if not feedbacks:
         Label(root, text="No counselor feedback notices found.", fg="#64748b", bg=bg_color, font=("Segoe UI", 14, "bold")).place(x=500, y=250)
     else:
         y = 180
         for fb in feedbacks:
-            fb_id, cid, cname, sid, msg, dt = fb
+            fb_id = fb.get("feedback_id")
+            cid = fb.get("counselor_id")
+            cname = fb.get("counselor_name")
+            sid = fb.get("student_id")
+            msg = fb.get("message")
+            dt = fb.get("created_at", "")
+            
+            # Format timestamp
+            if "T" in dt:
+                dt = dt.replace("T", " ")[:16]
 
             Label(root, text=cid, font=("Segoe UI", 9), fg="#1e293b", bg=bg_color).place(x=40, y=y)
             Label(root, text=cname, font=("Segoe UI", 9), fg="#1e293b", bg=bg_color).place(x=150, y=y)
@@ -89,7 +89,6 @@ def main(admin_name, admin_id):
 
             Label(root, text=str(dt), font=("Segoe UI", 9), fg="#1e293b", bg=bg_color).place(x=900, y=y)
 
-            # Simple helper bindings
             def make_adjust_cmd(sid_val):
                 return lambda: open_adjust_profile(sid_val)
 

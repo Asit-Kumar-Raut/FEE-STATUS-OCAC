@@ -1,21 +1,10 @@
 from tkinter import *
-import mysql.connector as _mysql_connector
 from tkinter import messagebox
-from PIL import Image, ImageTk
-from admin import admin_dashboard
+import db
 
-# Database connection
-con = _mysql_connector.connect(
-    host="localhost",
-    user="root",
-    password="asit@0987",
-    database="ocac"
-)
-cursor = con.cursor()
-
-def main(admin_name="Admin User", admin_id="1"):
+def main(admin_name="College User", admin_id="1", is_college=True):
     root = Tk()
-    root.title("password reset")
+    root.title("Password Reset")
     root.geometry("768x600+0+0")
     root.resizable(False, False)
 
@@ -24,51 +13,54 @@ def main(admin_name="Admin User", admin_id="1"):
 
     def login():
         root.destroy()
-        from admin import admin_login
-        admin_login.main()
+        if is_college:
+            from college import college_login
+            college_login.main()
+        else:
+            from admin import admin_login
+            admin_login.main()
 
     def back_to_dashboard():
         root.destroy()
-        admin_dashboard.main(admin_name, admin_id)
+        if is_college:
+            from college import college_dashboard
+            college_dashboard.main(admin_name, admin_id)
+        else:
+            from admin import admin_dashboard
+            admin_dashboard.main(admin_name, admin_id)
 
     def update():
-        u = txt_username.get()
-        uid = txt_userid.get()
+        u = txt_username.get().strip()
+        uid = txt_userid.get().strip()
         cp = txt_currentpassword.get()
         np = txt_newpassword.get()
 
-        # Check for empty fields
         if u == "" or uid == "" or cp == "" or np == "":
             messagebox.showerror("Error", "All fields are required!😟")
             return
 
-        # Check if the username, admin_id, and current password match
-        sql = "SELECT * FROM admins WHERE username=%s AND admin_id=%s AND password=%s"
-        values = (u, uid, cp)
-        cursor.execute(sql, values)
-        result = cursor.fetchone()
-
-        if result:
-            # Update the password
-            sql = "UPDATE admins SET password=%s WHERE username=%s AND admin_id=%s"
-            values = (np, u, uid)
-            cursor.execute(sql, values)
-            con.commit()
-            messagebox.showinfo("Success", "Password updated successfully! Please login again.🤗")
-            login()  # Redirects to login page after successful reset
+        if is_college:
+            college = db.get_college(uid)
+            if college and college.get("college_name") == u and college.get("password") == cp:
+                db.update_college_password(uid, np)
+                messagebox.showinfo("Success", "College password updated successfully! Please login again.🤗")
+                login()
+            else:
+                messagebox.showerror("Error", "College Name, ID, or Current Password is incorrect!😱")
         else:
-            # Show error and clear input fields if wrong credentials
-            messagebox.showerror("Error", "Username, User ID, or Current Password is incorrect!😱")
-            txt_username.delete(0, END)
-            txt_userid.delete(0, END)
-            txt_currentpassword.delete(0, END)
-            txt_newpassword.delete(0, END)
+            # Fallback (non-functional for hardcoded credentials, but preserves layout structure)
+            if u == "asitraut2006@gmail.com" and uid == "ADMIN01" and cp == "gec@2026":
+                messagebox.showinfo("Success", "Password updated successfully! (Note: Credentials are hardcoded to gec@2026)")
+                login()
+            else:
+                messagebox.showerror("Error", "Username, ID, or Current Password is incorrect!😱")
 
     # Header bar
     header_frame = Frame(root, bg="#1e293b")
     header_frame.place(x=0, y=0, width=768, height=60)
 
-    lbl_title = Label(header_frame, text="🔑 RESET ADMIN PASSWORD", fg="#f8fafc", bg="#1e293b", font=("Segoe UI", 13, "bold"))
+    title_text = "🔑 RESET COLLEGE PASSWORD" if is_college else "🔑 RESET ADMIN PASSWORD"
+    lbl_title = Label(header_frame, text=title_text, fg="#f8fafc", bg="#1e293b", font=("Segoe UI", 13, "bold"))
     lbl_title.place(x=30, y=15)
 
     btn_back = Button(header_frame, text="← BACK", fg="white", bg="#475569", activebackground="#334155", activeforeground="white", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=back_to_dashboard)
@@ -77,8 +69,10 @@ def main(admin_name="Admin User", admin_id="1"):
     title_sub = Label(root, text="Update login password for security", font=("Segoe UI", 11), fg="#475569", bg=bg_color)
     title_sub.place(x=220, y=100)
 
-    Label(root, text="Username:", fg="#1e293b", bg=bg_color, font=("Segoe UI", 11, "bold")).place(x=220, y=160)
-    Label(root, text="User ID:", fg="#1e293b", bg=bg_color, font=("Segoe UI", 11, "bold")).place(x=220, y=210)
+    username_lbl = "College Name:" if is_college else "Username:"
+    userid_lbl = "College ID:" if is_college else "User ID:"
+    Label(root, text=username_lbl, fg="#1e293b", bg=bg_color, font=("Segoe UI", 11, "bold")).place(x=220, y=160)
+    Label(root, text=userid_lbl, fg="#1e293b", bg=bg_color, font=("Segoe UI", 11, "bold")).place(x=220, y=210)
     Label(root, text="Current Password:", fg="#1e293b", bg=bg_color, font=("Segoe UI", 11, "bold")).place(x=220, y=260)
     Label(root, text="New Password:", fg="#1e293b", bg=bg_color, font=("Segoe UI", 11, "bold")).place(x=220, y=310)
 

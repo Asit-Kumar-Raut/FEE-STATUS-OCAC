@@ -1,6 +1,6 @@
 from tkinter import *
-import mysql.connector as _mysql_connector
 from tkinter import messagebox
+import db
 
 def main(name, student_id):
     root = Tk()
@@ -10,38 +10,38 @@ def main(name, student_id):
     bg_color = "#eff6ff"
     root.config(bg=bg_color)
 
-    con = _mysql_connector.connect(
-        host="localhost",
-        user="root",
-        password="asit@0987",
-        database="ocac"
-    )
-    cursor = con.cursor()
+    student_details = db.get_student(student_id)
+    if not student_details:
+        messagebox.showerror("Error", "Student details not found!")
+        root.destroy()
+        return
 
-    # Query student details
-    cursor.execute("SELECT student_id, name, username, phonenumber, emailid, course, academic_year, semester, total_fee, paid_amount, pending_amount FROM students WHERE student_id = %s", (student_id,))
-    student_details = cursor.fetchone()
+    s_id = student_details.get("student_id", "")
+    s_name = student_details.get("name", "")
+    username = student_details.get("username", "")
+    phone = student_details.get("phonenumber", "")
+    email = student_details.get("emailid", "")
+    course = student_details.get("course", "")
+    year = student_details.get("academic_year", "")
+    sem = student_details.get("semester", "")
+    total_fee = student_details.get("total_fee", 100000)
+    paid_amount = student_details.get("paid_amount", 0)
+    pending_amount = student_details.get("pending_amount", 100000)
 
-    s_id, s_name, username, phone, email, course, year, sem, total_fee, paid_amount, pending_amount = student_details
-
-    # Query online/offline breakdown
-    cursor.execute("SELECT SUM(amount) FROM payments WHERE student_id = %s AND mode = 'Online'", (student_id,))
-    res_online = cursor.fetchone()[0]
-    online_paid = res_online if res_online is not None else 0
-
-    cursor.execute("SELECT SUM(amount) FROM payments WHERE student_id = %s AND mode = 'Offline'", (student_id,))
-    res_offline = cursor.fetchone()[0]
-    offline_paid = res_offline if res_offline is not None else 0
+    # Query online/offline payments
+    payments = db.get_payments(student_id)
+    online_paid = sum(p.get("amount", 0) for p in payments if p.get("mode") == "Online")
+    offline_paid = sum(p.get("amount", 0) for p in payments if p.get("mode") == "Offline")
 
     def logout_action():
         root.destroy()
         from student import student_login
         student_login.main()
+
     def change_password():
         root.destroy()
         from student import student_pasword_update
         student_pasword_update.main(name, student_id)
-  
 
     def feedback_action():
         root.destroy()
@@ -72,7 +72,16 @@ def main(name, student_id):
     lbl_title = Label(root, text="REGISTRATION DETAILS", font=("Segoe UI", 16, "bold"), fg="#3b82f6", bg=bg_color)
     lbl_title.place(x=150, y=180)
 
-    details = [ ("Student ID:", s_id), ("Full Name:", s_name),("Username:", username),("Phone Number:", phone),("Email ID:", email),("Course:", course),("Academic Year:", year), ("Semester:", sem),]
+    details = [ 
+        ("Student ID:", s_id), 
+        ("Full Name:", s_name),
+        ("Username:", username),
+        ("Phone Number:", phone),
+        ("Email ID:", email),
+        ("Course:", course),
+        ("Academic Year:", year), 
+        ("Semester:", sem)
+    ]
 
     y_pos = 230
     for label, val in details:
@@ -96,6 +105,7 @@ def main(name, student_id):
     btn_reset.place(x=30, y=690, width=140, height=40)
     btn_reset.bind("<Enter>", lambda e: btn_reset.config(bg="#6d28d9"))
     btn_reset.bind("<Leave>", lambda e: btn_reset.config(bg="#7c3aed"))
+
     # RIGHT DIVISION: Fee Status
     lbl_fee_title = Label(root, text="FEE STATUS SUMMARY", font=("Segoe UI", 16, "bold"), fg="#0d9488", bg=bg_color)
     lbl_fee_title.place(x=750, y=180)

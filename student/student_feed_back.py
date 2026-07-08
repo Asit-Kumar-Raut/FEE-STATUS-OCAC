@@ -1,6 +1,6 @@
 from tkinter import *
-import mysql.connector as _mysql_connector
 from tkinter import messagebox
+import db
 
 def main(name, student_id):
     root = Tk()
@@ -8,14 +8,6 @@ def main(name, student_id):
     root.geometry("1366x768+0+0")
     bg_color = "#eff6ff"
     root.config(bg=bg_color)
-
-    con = _mysql_connector.connect(
-        host="localhost",
-        user="root",
-        password="asit@0987",
-        database="ocac"
-    )
-    cursor = con.cursor()
 
     def logout_action():
         root.destroy()
@@ -34,9 +26,12 @@ def main(name, student_id):
             messagebox.showerror("Error", "Feedback content cannot be empty!😟")
             return
 
-        sql = "INSERT INTO student_feedback (student_id, name, feedback) VALUES (%s, %s, %s)"
-        cursor.execute(sql, (student_id, name, feedback_text))
-        con.commit()
+        feedback_data = {
+            "student_id": student_id,
+            "name": name,
+            "feedback": feedback_text
+        }
+        db.add_student_feedback(feedback_data)
 
         messagebox.showinfo("Success", "Thank you! Your feedback has been submitted successfully.🤗")
         back_action()

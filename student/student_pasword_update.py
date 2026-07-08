@@ -1,21 +1,12 @@
 from tkinter import *
-import mysql.connector as _mysql_connector
 from tkinter import messagebox
 from PIL import Image, ImageTk
 from student import studentdash_board
-
-# Database connection
-con = _mysql_connector.connect(
-    host="localhost",
-    user="root",
-    password="asit@0987",
-    database="ocac"
-)
-cursor = con.cursor()
+import db
 
 def main(student_name="Student User", student_id="1"):
     root = Tk()
-    root.title("password reset")
+    root.title("Password Reset")
     root.geometry("768x600+0+0")
     root.resizable(False, False)
 
@@ -32,32 +23,22 @@ def main(student_name="Student User", student_id="1"):
         studentdash_board.main(student_name, student_id)
 
     def update():
-        u = txt_username.get()
-        uid = txt_userid.get()
+        u = txt_username.get().strip()
+        uid = txt_userid.get().strip()
         cp = txt_currentpassword.get()
         np = txt_newpassword.get()
 
-        # Check for empty fields
         if u == "" or uid == "" or cp == "" or np == "":
             messagebox.showerror("Error", "All fields are required!😟")
             return
 
-        # Check if the username, student_id, and current password match
-        sql = "SELECT * FROM  students  WHERE username=%s AND student_id=%s AND password=%s"
-        values = (u, uid, cp)
-        cursor.execute(sql, values)
-        result = cursor.fetchone()
+        student = db.get_student(uid)
 
-        if result:
-            # Update the password
-            sql = "UPDATE  students  SET password=%s WHERE username=%s AND student_id=%s"
-            values = (np, u, uid)
-            cursor.execute(sql, values)
-            con.commit()
+        if student and student.get("username") == u and student.get("password") == cp:
+            db.update_student_password(uid, np)
             messagebox.showinfo("Success", "Password updated successfully! Please login again.🤗")
-            login()  # Redirects to login page after successful reset
+            login()
         else:
-            # Show error and clear input fields if wrong credentials
             messagebox.showerror("Error", "Username, User ID, or Current Password is incorrect!😱")
             txt_username.delete(0, END)
             txt_userid.delete(0, END)

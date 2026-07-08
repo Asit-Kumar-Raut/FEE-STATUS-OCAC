@@ -1,6 +1,6 @@
 from tkinter import *
-import mysql.connector as _mysql_connector
 from tkinter import messagebox
+import db
 
 def main(counselor_name, counselor_id):
     root = Tk()
@@ -9,16 +9,10 @@ def main(counselor_name, counselor_id):
     root.resizable(False, False)
     root.config(bg="white")
 
-    con = _mysql_connector.connect(
-        host="localhost",
-        user="root",
-        password="asit@0987",
-        database="ocac"
-    )
-    cursor = con.cursor()
+    coun_info = db.get_counselor(counselor_id)
+    college_name = coun_info.get("college_name", "") if coun_info else ""
 
-    cursor.execute("SELECT student_id, name, course, total_fee, paid_amount, pending_amount FROM students WHERE pending_amount <= 0 AND status = 'Accepted'")
-    students = cursor.fetchall()
+    students = db.get_students_by_college(college_name, status="Accepted", paid_status="Fully Paid")
 
     def logout_action():
         root.destroy()
@@ -36,7 +30,7 @@ def main(counselor_name, counselor_id):
         counciler_student.main(counselor_name, counselor_id, sid)
 
     # Header
-    lbl_counselor = Label(root, text=f"🎓 COUNSELOR PROFILE: {counselor_name} (ID: {counselor_id})", fg="#8b5cf6", bg="white", font=("Segoe UI", 12, "bold"))
+    lbl_counselor = Label(root, text=f"🎓 COUNSELOR PROFILE: {counselor_name} (ID: {counselor_id}) | College: {college_name}", fg="#8b5cf6", bg="white", font=("Segoe UI", 12, "bold"))
     lbl_counselor.place(x=30, y=15)
 
     btn_logout = Button(root, text="LOG OUT", fg="white", bg="#ef4444", font=("Segoe UI", 10, "bold"), bd=0, cursor="hand2", command=logout_action)
@@ -67,7 +61,12 @@ def main(counselor_name, counselor_id):
     else:
         y = 70
         for s in students:
-            s_id, name, course, t_fee, paid, pending = s
+            s_id = s.get("student_id")
+            name = s.get("name")
+            course = s.get("course")
+            t_fee = s.get("total_fee", 100000)
+            paid = s.get("paid_amount", 0)
+            pending = s.get("pending_amount", 100000)
 
             Label(table_frame, text=s_id, font=("Segoe UI", 10), fg="#334155", bg="white").place(x=30, y=y)
             Label(table_frame, text=name, font=("Segoe UI", 10), fg="#334155", bg="white").place(x=150, y=y)
@@ -77,9 +76,7 @@ def main(counselor_name, counselor_id):
             Label(table_frame, text=f"₹ {pending:,}", font=("Segoe UI", 10, "bold"), fg="#10b981", bg="white").place(x=850, y=y)
 
             def make_view_cmd(sid):
-                def cmd():
-                    open_student_profile(sid)
-                return cmd
+                return lambda: open_student_profile(sid)
 
             btn_view = Button(table_frame, text="View Profile", fg="white", bg="#3b82f6", font=("Segoe UI", 9, "bold"), bd=0, cursor="hand2", command=make_view_cmd(s_id))
             btn_view.place(x=1020, y=y-3, width=100, height=26)

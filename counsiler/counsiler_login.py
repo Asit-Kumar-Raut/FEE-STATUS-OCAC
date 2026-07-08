@@ -1,21 +1,13 @@
 from tkinter import *
 from PIL import Image, ImageTk
-import mysql.connector as _mysql_connector
 from tkinter import messagebox
+import db
 
 def main():
     root = Tk()
     root.title("Counselor Login")
     root.geometry("1366x768+0+0")
     root.resizable(False, False)
-
-    con = _mysql_connector.connect(
-        host="localhost",
-        user="root",
-        password="asit@0987",
-        database="ocac"
-    )
-    cursor = con.cursor()
 
     def register():
         root.destroy()
@@ -24,24 +16,25 @@ def main():
 
     def back():
         root.destroy()
-        from counsiler import consiler_register
-        consiler_register.main()
+        import home
+        home.main()
 
     def login_action():
-        username = txt_username.get()
+        username = txt_username.get().strip()
         password = txt_password.get()
 
         if username == "" or password == "":
             messagebox.showerror("Error", "All fields are required!😟")
             return
 
-        cursor.execute("SELECT name, counselor_id, status FROM counselors WHERE username = %s AND password = %s", (username, password))
-        result = cursor.fetchone()
+        coun = db.get_counselor_by_username(username)
 
-        if result:
-            name, counselor_id, status = result
+        if coun and coun.get("password") == password:
+            name = coun.get("name")
+            counselor_id = coun.get("counselor_id")
+            status = coun.get("status")
             if status != "Accepted":
-                messagebox.showerror("Access Denied", "Your account is pending admin approval.😟")
+                messagebox.showerror("Access Denied", "Your account is pending college approval.😟")
             else:
                 messagebox.showinfo("Success", f"Welcome Counselor {name}!🤗")
                 root.destroy()
