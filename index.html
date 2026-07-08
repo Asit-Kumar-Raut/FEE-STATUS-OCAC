@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Fee Status Management - Download Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc;
+            --text-mute: #cbd5e1;
+            --accent-blue: #3b82f6;
+            --accent-teal: #0d9488;
+            --accent-teal-hover: #0f766e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            background-image: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.95)), 
+                              url('images/WhatsApp%20Image%202026-06-23%20at%2011.19.09%20AM.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60a5fa, #2dd4bf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .hero-card {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            border-radius: 24px;
+            padding: 3.5rem 2rem;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-card h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-card p {
+            font-size: 1.15rem;
+            color: var(--text-mute);
+            margin-bottom: 2.5rem;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        @media(min-width: 576px) {
+            .button-group {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.9rem 2rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-download {
+            background-color: var(--accent-teal);
+            color: var(--text-main);
+            box-shadow: 0 4px 20px rgba(13, 148, 136, 0.4);
+        }
+
+        .btn-download:hover {
+            background-color: var(--accent-teal-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(13, 148, 136, 0.6);
+        }
+
+        .btn-doc {
+            background-color: transparent;
+            color: var(--text-main);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-doc:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .instructions-section {
+            text-align: left;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+        }
+
+        .instructions-section h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.25rem;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .step-num {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-right: 1.25rem;
+        }
+
+        .step-text h4 {
+            font-size: 1.05rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .step-text p {
+            color: var(--text-mute);
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2.5rem;
+            color: var(--text-mute);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px);
+            background: rgba(15, 23, 42, 0.6);
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">College Fee Status Management</div>
+    </header>
+
+    <div class="main-container">
+        <div class="hero-card">
+            <h1>Desktop Application Portal</h1>
+            <p>Secure cloud-connected management system for student accounts, fee collections, real-time validations, and PDF payment receipt downloads.</p>
+            
+            <div class="button-group">
+                <!-- Replace the href below with your direct Google Drive download link -->
+                <a href="INSERT_YOUR_DIRECT_DOWNLOAD_LINK_HERE" class="cta-btn btn-download">📥 Download for Windows (.zip)</a>
+                <a href="documentation/OCAC-FEE-STATUS-GROUP-01-DOCUMENATION.pdf" class="cta-btn btn-doc" target="_blank">📖 Download Documentation (PDF)</a>
+            </div>
+
+            <div class="instructions-section">
+                <h3>Setup and Installation Steps</h3>
+                
+                <div class="step">
+                    <span class="step-num">01</span>
+                    <div class="step-text">
+                        <h4>Download the ZIP Archive</h4>
+                        <p>Click the "Download for Windows" button above to download the application files on your computer.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <span class="step-num">02</span>
+                    <div class="step-text">
+                        <h4>Extract the ZIP Folder</h4>
+                        <p>Locate the downloaded <code>FeeStatusManager.zip</code> file, right-click, and select "Extract All" to unpack it.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <span class="step-num">03</span>
+                    <div class="step-text">
+                        <h4>Run the Application</h4>
+                        <p>Open the extracted folder and double-click <code>FeeStatusManager.exe</code> to launch. Ensure that <code>firebase_credentials.json</code> remains in the same directory!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 College Fee Status Management. All rights reserved.</p>
+    </footer>
+</body>
+</html>
