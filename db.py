@@ -4,7 +4,12 @@ import datetime
 from tkinter import messagebox
 
 # Path to the Firebase Service Account private key JSON
-CRED_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "firebase_credentials.json")
+if getattr(sys, 'frozen', False):
+    # Running as a compiled executable, look next to the .exe file
+    CRED_PATH = os.path.join(os.path.dirname(sys.executable), "firebase_credentials.json")
+else:
+    # Running as a normal Python script
+    CRED_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "firebase_credentials.json")
 
 _db_client = None
 _use_mock_db = False
