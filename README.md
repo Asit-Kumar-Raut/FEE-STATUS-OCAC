@@ -33,45 +33,6 @@ The application features a modern desktop user interface that communicates direc
 
 ---
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-Make sure Python 3.10+ is installed on your computer. Install all dependencies by running:
-
-```bash
-pip install firebase-admin reportlab pillow pyinstaller
-```
-
-### Running in Development Mode
-
-To start the application locally using Python, run:
-
-```bash
-python app.py
-```
-
----
-
-## 📦 Packaging & Deploying the App
-
-### Step 1: Compile the Standalone Code
-Run the compilation script in your workspace to bundle all python modules, credentials, and image folders into the `dist/FeeManager` directory:
-
-```bash
-python build_app.py
-```
-
-### Step 2: Build the Setup.exe Installer
-Open **Inno Setup** on your computer, import `setup_script.iss`, and click **Compile** (or run the shortcut command in terminal):
-
-```powershell
-& "C:\Users\asitr\AppData\Local\Programs\Inno Setup 6\ISCC.exe" setup_script.iss
-```
-
-This generates **`dist/FeeManagerSetup.exe`** which is the final installer you can share with your users.
-
----
 
 ## 👥 Development Team
 
@@ -83,7 +44,5 @@ This generates **`dist/FeeManagerSetup.exe`** which is the final installer you c
 ### 🎓 Guided by Mentor:
 *   **Benumadhaba Ratha**
 
----
 
-## 📄 License
 This project was developed for **OCAC** training purposes. All rights reserved.
